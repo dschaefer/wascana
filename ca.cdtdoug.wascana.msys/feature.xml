@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="ca.cdtdoug.wascana.msys"
-      label="Msys"
+      label="Wascana MSYS GNU Shell for Windows"
       version="1.0.0"
       provider-name="Doug Schaefer">
 
@@ -11,12 +11,12 @@
 Everything you need to run standard *nix type make.
    </description>
 
-   <copyright url="http://www.example.com/copyright">
-      [Enter Copyright Description here.]
-   </copyright>
-
    <license url="http://www.gnu.org/copyleft/gpl.html">
       GPL
    </license>
+
+   <url>
+      <discovery label="Wascana updates" url="http://downloads.sourceforge.net/projects/wascana/files/repo"/>
+   </url>
 
 </feature>

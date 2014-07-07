@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="ca.cdtdoug.wascana.mingw"
+      label="Wascana MinGW GNU Toolchain for Windows"
+      version="4.9.0">
+
+   <description url="http://www.example.com/description">
+      [Enter Feature Description here.]
+   </description>
+
+   <license url="http://www.gnu.org/copyleft/gpl.html">
+      
+   </license>
+
+   <url>
+      <discovery label="Wascana updates" url="http://downloads.sourceforge.net/projects/wascana/files/repo"/>
+   </url>
+
+   <includes
+         id="ca.cdtdoug.wascana.msys"
+         version="0.0.0"/>
+
+</feature>

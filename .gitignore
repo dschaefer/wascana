@@ -1,4 +1,5 @@
 .metadata
 target/
-.zip
-.tar.gz
+*/*.zip
+*/*.tar.gz
+*/rootfiles*

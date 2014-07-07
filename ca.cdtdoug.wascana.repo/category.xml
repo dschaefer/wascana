@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+    <category-def name="mingw" label="MinGW GNU Tools for Windows"/>
+    <feature id="ca.cdtdoug.wascana.mingw" version="0.0.0">
+        <category name="mingw"/>
+    </feature>
+</site>
