@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.cdt.managedbuilder.core.buildDefinitions">
+      <managedBuildRevision
+            fileVersion="4.0.0">
+      </managedBuildRevision>
+      <toolChain
+            configurationEnvironmentSupplier="ca.cdtdoug.wascana.arduino.core.EnvVarSupplier"
+            id="ca.cdtdoug.wascana.arduino.toolChain.avr"
+            isAbstract="false"
+            name="Arduino AVR C++"
+            supportsManagedBuild="false">
+         <targetPlatform
+               binaryParser="org.eclipse.cdt.core.ELF"
+               id="ca.cdtdoug.wascana.arduino.targetPlatform"
+               isAbstract="false"
+               name="Arduino">
+         </targetPlatform>
+         <builder
+               buildRunner="org.eclipse.cdt.managedbuilder.core.ExternalBuildRunner"
+               command="make"
+               commandLauncher="org.eclipse.cdt.core.CommandLauncher"
+               id="ca.cdtdoug.wascana.arduino.builder.make"
+               isAbstract="false"
+               isVariableCaseSensitive="false"
+               name="Arduino Make">
+         </builder>
+         <tool
+               command="avr-g++"
+               id="ca.cdtdoug.wascana.arduino.tool.avr.compiler"
+               isAbstract="false"
+               name="Arduino AVR C++ Compiler"
+               natureFilter="ccnature">
+            <inputType
+                  id="ca.cdtdoug.wascana.arduino.inputType.avr.compiler"
+                  sources="cpp">
+            </inputType>
+         </tool>
+      </toolChain>
+   </extension>
+
+</plugin>

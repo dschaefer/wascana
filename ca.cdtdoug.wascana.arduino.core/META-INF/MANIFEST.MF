@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Wascana for Arduino Core
+Bundle-SymbolicName: ca.cdtdoug.wascana.arduino.core;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: ca.cdtdoug.wascana.arduino.core.Activator
+Bundle-Vendor: Doug Schaefer
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.core.resources,
+ org.eclipse.cdt.core,
+ com.qnx.tools.ide.qde.managedbuilder.core
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-ActivationPolicy: lazy

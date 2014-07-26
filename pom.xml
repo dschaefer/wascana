@@ -13,7 +13,6 @@
     </properties>
 
     <modules>
-        <module>ca.cdtdoug.wascana.msys</module>
         <module>ca.cdtdoug.wascana.mingw</module>
         <module>ca.cdtdoug.wascana.repo</module>
     </modules>
