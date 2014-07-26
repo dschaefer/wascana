@@ -7,10 +7,13 @@
             fileVersion="4.0.0">
       </managedBuildRevision>
       <toolChain
+            archList="all"
             configurationEnvironmentSupplier="ca.cdtdoug.wascana.arduino.core.EnvVarSupplier"
             id="ca.cdtdoug.wascana.arduino.toolChain.avr"
             isAbstract="false"
+            languageSettingsProviders="org.eclipse.cdt.managedbuilder.core.GCCBuildCommandParser;ca.cdtdoug.wascana.arduino.avr.languageSettingsProvider"
             name="Arduino AVR C++"
+            osList="all"
             supportsManagedBuild="false">
          <targetPlatform
                binaryParser="org.eclipse.cdt.core.ELF"
@@ -32,13 +35,23 @@
                id="ca.cdtdoug.wascana.arduino.tool.avr.compiler"
                isAbstract="false"
                name="Arduino AVR C++ Compiler"
-               natureFilter="ccnature">
-            <inputType
-                  id="ca.cdtdoug.wascana.arduino.inputType.avr.compiler"
-                  sources="cpp">
-            </inputType>
+               natureFilter="ccnature"
+               superClass="cdt.managedbuild.tool.gnu.cpp.compiler.base">
          </tool>
       </toolChain>
+   </extension>
+   <extension
+         point="org.eclipse.cdt.core.LanguageSettingsProvider">
+      <provider
+            class="ca.cdtdoug.wascana.arduino.core.AvrLanguageSettingsProvider"
+            id="ca.cdtdoug.wascana.arduino.avr.languageSettingsProvider"
+            name="Arduino"
+            parameter="${COMMAND} ${FLAGS} -E -P -v -dD &quot;${INPUTS}&quot;"
+            prefer-non-shared="false">
+         <language-scope
+               id="org.eclipse.cdt.core.g++">
+         </language-scope>
+      </provider>
    </extension>
 
 </plugin>

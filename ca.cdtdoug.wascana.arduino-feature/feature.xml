@@ -17,6 +17,11 @@
       [Enter License Description here.]
    </license>
 
+   <requires>
+      <import feature="org.eclipse.cdt"/>
+      <import feature="org.eclipse.platform"/>
+   </requires>
+
    <plugin
          id="ca.cdtdoug.wascana.arduino.core"
          download-size="0"

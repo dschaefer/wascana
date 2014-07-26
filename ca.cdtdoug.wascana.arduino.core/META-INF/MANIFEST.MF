@@ -8,6 +8,7 @@ Bundle-Vendor: Doug Schaefer
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.resources,
  org.eclipse.cdt.core,
- com.qnx.tools.ide.qde.managedbuilder.core
+ org.eclipse.cdt.managedbuilder.core,
+ org.eclipse.cdt.managedbuilder.gnu.ui
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
