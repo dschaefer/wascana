@@ -11,7 +11,7 @@
             configurationEnvironmentSupplier="ca.cdtdoug.wascana.arduino.core.EnvVarSupplier"
             id="ca.cdtdoug.wascana.arduino.toolChain.avr"
             isAbstract="false"
-            languageSettingsProviders="org.eclipse.cdt.managedbuilder.core.GCCBuildCommandParser;ca.cdtdoug.wascana.arduino.avr.languageSettingsProvider"
+            languageSettingsProviders="ca.cdtdoug.wascana.arduino.avr.builtins;ca.cdtdoug.wascana.arduino.avr.outputParser"
             name="Arduino AVR C++"
             osList="all"
             supportsManagedBuild="false">
@@ -44,13 +44,19 @@
          point="org.eclipse.cdt.core.LanguageSettingsProvider">
       <provider
             class="ca.cdtdoug.wascana.arduino.core.AvrLanguageSettingsProvider"
-            id="ca.cdtdoug.wascana.arduino.avr.languageSettingsProvider"
-            name="Arduino"
-            parameter="${COMMAND} ${FLAGS} -E -P -v -dD &quot;${INPUTS}&quot;"
-            prefer-non-shared="false">
+            id="ca.cdtdoug.wascana.arduino.avr.builtins"
+            name="Arduino AVR Compiler Built-ins"
+            parameter="${COMMAND} ${FLAGS} -E -P -v -dD &quot;${INPUTS}&quot;">
          <language-scope
                id="org.eclipse.cdt.core.g++">
          </language-scope>
+      </provider>
+      <provider
+            class="org.eclipse.cdt.managedbuilder.language.settings.providers.GCCBuildCommandParser"
+            id="ca.cdtdoug.wascana.arduino.avr.outputParser"
+            name="Arduino AVR Built Output Parser"
+            parameter="(avr-gcc)|(avr-g\+\+)"
+            prefer-non-shared="true">
       </provider>
    </extension>
 
