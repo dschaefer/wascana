@@ -74,6 +74,13 @@ public class EnvVarSupplier implements IConfigurationEnvironmentVariableSupplier
 		}
 	}
 	
+	public IBuildEnvironmentVariable getOutputDir(IConfiguration configuration) {
+		EnvVar outputDir = new EnvVar();
+		outputDir.name = "OUTPUT_DIR";
+		outputDir.value = "build/" + configuration.getName();
+		return outputDir;
+	}
+	
 	@Override
 	public IBuildEnvironmentVariable getVariable(String variableName,
 			IConfiguration configuration, IEnvironmentVariableProvider provider) {
@@ -81,6 +88,9 @@ public class EnvVarSupplier implements IConfigurationEnvironmentVariableSupplier
 			return path;
 		else if (arduinoHome != null && variableName.equals(arduinoHome.name))
 			return arduinoHome;
+		else if (variableName.equals("OUTPUT_DIR")) {
+			return getOutputDir(configuration);
+		}
 		return null;
 	}
 
@@ -95,6 +105,9 @@ public class EnvVarSupplier implements IConfigurationEnvironmentVariableSupplier
 		if (arduinoHome != null)
 			vars.add(arduinoHome);
 		
+		if (configuration != null)
+			vars.add(getOutputDir(configuration));
+
 		return vars.toArray(new IBuildEnvironmentVariable[vars.size()]);
 	}
 

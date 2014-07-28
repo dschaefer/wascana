@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?pde version="3.8"?><target name="arduino" sequenceNumber="3">
+<locations>
+<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.cdt.sdk.feature.group" version="8.5.0.201407261002"/>
+<repository location="http://download.eclipse.org/tools/cdt/builds/master/nightly"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.platform.sdk" version="4.4.0.I20140606-1215"/>
+<repository location="http://download.eclipse.org/eclipse/updates/4.4"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.tcf.te.terminals.sdk.feature.feature.group" version="1.3.0.201407221247"/>
+<unit id="org.eclipse.tcf.te.tcf.core.sdk.feature.feature.group" version="1.3.0.201407251128"/>
+<repository location="http://download.eclipse.org/tools/tcf/builds/development/nightly"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.tm.terminal.core.sdk.feature.group" version="3.3.300.201406060905"/>
+<repository location="http://download.eclipse.org/tm/updates/3.6"/>
+</location>
+</locations>
+</target>
