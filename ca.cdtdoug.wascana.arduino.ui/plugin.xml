@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.tcf.te.ui.terminals.connectorTypes">
+      <connectorType
+            class="ca.cdtdoug.wascana.arduino.ui.serial.ArduinoSerialConnectorType"
+            id="ca.cdtdoug.wascana.arduino.serial.Connector"
+            label="Arduino Serial">
+      </connectorType>
+   </extension>
+   <extension
+         point="org.eclipse.tcf.te.ui.terminals.launcherDelegates">
+      <delegate
+            class="ca.cdtdoug.wascana.arduino.ui.serial.ArduinoSerialMonitorDelegate"
+            id="ca.cdtdoug.wascana.arduino.launcherDelegate.serial"
+            label="Arduino Serial Monitor">
+      </delegate>
+   </extension>
+   <extension
+         point="org.eclipse.tm.terminal.terminalConnectors">
+      <connector
+            class="ca.cdtdoug.wascana.arduino.ui.serial.ArduinoSerialConnector"
+            hidden="false"
+            id="ca.cdtdoug.wascana.arduino.ui.connector1">
+      </connector>
+   </extension>
+
+</plugin>

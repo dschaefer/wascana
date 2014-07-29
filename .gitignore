@@ -1,5 +1,3 @@
-.metadata
-.test
 target/
 */*.zip
 */*.tar.gz

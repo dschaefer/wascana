@@ -8,16 +8,12 @@
       [Enter Feature Description here.]
    </description>
 
-   <license url="http://www.gnu.org/copyleft/gpl.html">
-      
+   <license url="">
+      GPL for the tools. LGPL or better for libraries.
    </license>
 
    <url>
       <discovery label="Wascana updates" url="http://downloads.sourceforge.net/projects/wascana/files/repo"/>
    </url>
-
-   <includes
-         id="ca.cdtdoug.wascana.msys"
-         version="0.0.0"/>
 
 </feature>
