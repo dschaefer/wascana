@@ -59,5 +59,31 @@
             prefer-non-shared="true">
       </provider>
    </extension>
+   <extension
+         point="org.eclipse.cdt.launchbar.core.launchBarContributions">
+      <targetType
+            class="ca.cdtdoug.wascana.arduino.core.launch.ArduinoLaunchTargetType"
+            id="ca.cdtdoug.wascana.arduino.core.targetType">
+      </targetType>
+      <descriptorType
+            class="ca.cdtdoug.wascana.arduino.core.launch.ArduinoLaunchDescriptorType"
+            id="ca.cdtdoug.wascana.arduino.core.descriptorType"
+            priority="5">
+      </descriptorType>
+      <configProvider
+            class="ca.cdtdoug.wascana.arduino.core.launch.ArduinoLaunchConfigurationProvider"
+            descriptorType="ca.cdtdoug.wascana.arduino.core.descriptorType"
+            targetType="ca.cdtdoug.wascana.arduino.core.targetType">
+      </configProvider>
+   </extension>
+   <extension
+         point="org.eclipse.debug.core.launchConfigurationTypes">
+      <launchConfigurationType
+            delegate="ArduinoLaunchConfigurationType"
+            id="ca.cdtdoug.wascana.arduino.core.launchConfigurationType"
+            modes="run"
+            name="Arduino">
+      </launchConfigurationType>
+   </extension>
 
 </plugin>

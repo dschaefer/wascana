@@ -1,25 +1,52 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde version="3.8"?><target name="arduino" sequenceNumber="7">
 <locations>
-<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.cdt.sdk.feature.group" version="0.0.0"/>
-<repository location="http://download.eclipse.org/tools/cdt/builds/master/nightly"/>
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.jetty.bundles.f.feature.group" version="0.0.0"/>
+<repository location="http://download.eclipse.org/jetty/updates/jetty-bundles-8.x"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.apache.log4j" version="0.0.0"/>
+<unit id="org.apache.log4j.source" version="0.0.0"/>
+<unit id="net.sourceforge.lpg.lpgjavaruntime" version="0.0.0"/>
+<unit id="org.junit" version="0.0.0"/>
+<unit id="org.junit.source" version="0.0.0"/>
+<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20140525021250/repository/"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.swtbot.eclipse.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.swtbot.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.swtbot.eclipse.test.junit.feature.group" version="0.0.0"/>
+<repository location="http://download.eclipse.org/technology/swtbot/releases/latest/"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.rse.feature.group" version="0.0.0"/>
+<repository location="http://download.eclipse.org/tm/updates/3.6milestones/"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.sdk.ide" version="0.0.0"/>
+<unit id="org.eclipse.test.feature.group" version="0.0.0"/>
+<repository location="http://download.eclipse.org/eclipse/updates/4.4milestones/"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.remote.feature.group" version="0.0.0"/>
+<repository location="http://download.eclipse.org/tools/ptp/builds/remote/luna/nightly/"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.license.feature.group" version="0.0.0"/>
+<repository location="http://download.eclipse.org/cbi/updates/license/"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.platform.sdk" version="0.0.0"/>
-<repository location="http://download.eclipse.org/eclipse/updates/4.4"/>
-</location>
-<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.tm.terminal.core.sdk.feature.group" version="0.0.0"/>
-<repository location="http://download.eclipse.org/tm/updates/3.6"/>
-</location>
-<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.tcf.te.tcf.core.sdk.feature.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.tcf.te.terminals.feature.feature.group" version="0.0.0"/>
 <repository location="http://download.eclipse.org/tools/tcf/builds/development/nightly"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.scream3r.jssc" version="2.8.0"/>
 <repository location="file:/Users/dschaefer/workspaces/wascana/wascana/ca.cdtdoug.wascana.deps/repo/target/repository/"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.cdt.sdk.feature.group" version="0.0.0"/>
+<repository location="http://download.eclipse.org/tools/cdt/builds/master/nightly"/>
 </location>
 </locations>
 </target>

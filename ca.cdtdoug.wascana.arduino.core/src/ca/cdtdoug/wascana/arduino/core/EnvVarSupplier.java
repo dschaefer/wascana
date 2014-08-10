@@ -41,20 +41,9 @@ public class EnvVarSupplier implements IConfigurationEnvironmentVariableSupplier
 	}
 
 	public EnvVarSupplier() {
-		File arduinoPath = null;
-		String arduinoPathStr = System.getProperty("ca.cdtdoug.wascana.arduino.home");
-		if (arduinoPathStr != null) {
-			arduinoPath = new File(arduinoPathStr);
-		} else {
-			try {
-				arduinoPath = new File(new File(Platform.getInstallLocation().getURL().toURI()), "arduino");
-			} catch (URISyntaxException e) {
-				// TODO log
-				e.printStackTrace();
-			}
-		}
-
-		if (arduinoPath != null && arduinoPath.isDirectory()) {
+		File arduinoPath = ArduinoHome.get();
+		
+		if (arduinoPath.isDirectory()) {
 			arduinoHome = new EnvVar();
 			arduinoHome.name = "ARDUINO_HOME";
 			arduinoHome.value = arduinoPath.getAbsolutePath();

@@ -12,6 +12,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.tcf.te.ui.terminals,
  org.eclipse.tcf.te.runtime,
  org.eclipse.tcf.te.ui.controls,
- org.eclipse.ui.forms
+ org.eclipse.ui.forms,
+ org.eclipse.debug.ui
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy

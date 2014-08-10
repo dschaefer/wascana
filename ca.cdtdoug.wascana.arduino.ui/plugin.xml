@@ -22,8 +22,17 @@
       <connector
             class="ca.cdtdoug.wascana.arduino.ui.serial.ArduinoSerialConnector"
             hidden="false"
-            id="ca.cdtdoug.wascana.arduino.ui.connector1">
+            id="ca.cdtdoug.wascana.arduino.connector"
+            name="Arduino Serial Monitor">
       </connector>
+   </extension>
+   <extension
+         point="org.eclipse.debug.ui.launchConfigurationTypeImages">
+      <launchConfigurationTypeImage
+            configTypeID="ca.cdtdoug.wascana.arduino.core.launchConfigurationType"
+            icon="icons/logo.png"
+            id="ca.cdtdoug.wascana.arduino.ui.launchConfigurationTypeImage1">
+      </launchConfigurationTypeImage>
    </extension>
 
 </plugin>
