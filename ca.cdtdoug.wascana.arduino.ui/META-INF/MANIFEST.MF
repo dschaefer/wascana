@@ -13,6 +13,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.tcf.te.runtime,
  org.eclipse.tcf.te.ui.controls,
  org.eclipse.ui.forms,
- org.eclipse.debug.ui
+ org.eclipse.debug.ui,
+ ca.cdtdoug.wascana.arduino.core
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy

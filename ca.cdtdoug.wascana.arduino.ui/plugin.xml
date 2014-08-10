@@ -34,5 +34,22 @@
             id="ca.cdtdoug.wascana.arduino.ui.launchConfigurationTypeImage1">
       </launchConfigurationTypeImage>
    </extension>
+   <extension
+         point="org.eclipse.ui.newWizards">
+      <category
+            id="ca.cdtdoug.wascana.arduino.ui.newCategory"
+            name="Arduino">
+      </category>
+      <wizard
+            canFinishEarly="false"
+            category="ca.cdtdoug.wascana.arduino.ui.newCategory"
+            class="ca.cdtdoug.wascana.arduino.ui.target.NewArduinoTargetWizard"
+            hasPages="true"
+            icon="icons/logo.png"
+            id="ca.cdtdoug.wascana.arduino.ui.newTargetWizard"
+            name="Android Target"
+            project="false">
+      </wizard>
+   </extension>
 
 </plugin>

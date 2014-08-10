@@ -15,3 +15,6 @@ Require-Bundle: org.eclipse.core.runtime,
  org.scream3r.jssc
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
+Export-Package: ca.cdtdoug.wascana.arduino.core,
+ ca.cdtdoug.wascana.arduino.core.launch,
+ ca.cdtdoug.wascana.arduino.core.target
