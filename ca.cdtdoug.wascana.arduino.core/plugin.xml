@@ -79,7 +79,7 @@
    <extension
          point="org.eclipse.debug.core.launchConfigurationTypes">
       <launchConfigurationType
-            delegate="ArduinoLaunchConfigurationType"
+            delegate="ca.cdtdoug.wascana.arduino.core.launch.ArduinoLaunchConfigurationDelegate"
             id="ca.cdtdoug.wascana.arduino.core.launchConfigurationType"
             modes="run"
             name="Arduino">

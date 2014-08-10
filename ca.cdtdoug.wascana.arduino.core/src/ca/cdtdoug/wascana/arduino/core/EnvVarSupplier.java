@@ -1,7 +1,6 @@
 package ca.cdtdoug.wascana.arduino.core;
 
 import java.io.File;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
