@@ -18,6 +18,7 @@ public class ArduinoTargetRegistry {
 	private List<Board> boards = new ArrayList<>();
 	private Map<String, ArduinoTarget> targets = new HashMap<>();
 	private List<Listener> listeners = new LinkedList<>();
+	private ArduinoTarget activeTarget;
 
 	public interface Listener {
 		void targetAdded(ArduinoTarget target);
@@ -85,6 +86,14 @@ public class ArduinoTargetRegistry {
 
 	public void removeListener(Listener listener) {
 		listeners.remove(listener);
+	}
+
+	public void setActiveTarget(ArduinoTarget target) {
+		activeTarget = target;
+	}
+
+	public ArduinoTarget getActiveTarget() {
+		return activeTarget;
 	}
 
 }

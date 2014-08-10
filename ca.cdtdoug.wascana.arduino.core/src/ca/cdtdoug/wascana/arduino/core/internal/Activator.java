@@ -1,7 +1,8 @@
-package ca.cdtdoug.wascana.arduino.core;
+package ca.cdtdoug.wascana.arduino.core.internal;
 
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceReference;
 
 import ca.cdtdoug.wascana.arduino.core.target.ArduinoTargetRegistry;
 
@@ -22,4 +23,8 @@ public class Activator implements BundleActivator {
 		Activator.context = null;
 	}
 
+	public static <T> T getService(Class<T> cls) {
+		ServiceReference<T> ref = context.getServiceReference(cls);
+		return ref == null ? null : context.getService(ref);
+	}
 }

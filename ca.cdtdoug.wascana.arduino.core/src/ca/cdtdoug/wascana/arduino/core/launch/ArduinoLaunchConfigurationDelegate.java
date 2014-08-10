@@ -9,6 +9,12 @@ import org.eclipse.debug.core.model.LaunchConfigurationDelegate;
 public class ArduinoLaunchConfigurationDelegate extends LaunchConfigurationDelegate {
 
 	@Override
+	public boolean buildForLaunch(ILaunchConfiguration configuration,
+			String mode, IProgressMonitor monitor) throws CoreException {
+		return super.buildForLaunch(configuration, mode, monitor);
+	}
+	
+	@Override
 	public void launch(ILaunchConfiguration configuration, String mode,
 			ILaunch launch, IProgressMonitor monitor) throws CoreException {
 	}

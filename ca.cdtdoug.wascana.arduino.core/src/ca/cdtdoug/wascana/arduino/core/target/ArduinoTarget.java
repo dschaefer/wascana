@@ -6,12 +6,14 @@ import jssc.SerialPort;
 
 public class ArduinoTarget {
 
+	private String name;
+	
 	public ArduinoTarget(String name, String portName, Board board) {
-
+		this.name = name;
 	}
 
 	public String getName() {
-		return null;
+		return name;
 	}
 
 	public void setTerminalParams(int baudRate, int dataBits, int stopBits, int parity) {
