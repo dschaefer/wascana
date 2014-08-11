@@ -1,5 +1,6 @@
 package ca.cdtdoug.wascana.arduino.ui.target;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.INewWizard;
@@ -26,7 +27,13 @@ public class NewArduinoTargetWizard extends Wizard implements INewWizard {
 	
 	@Override
 	public boolean performFinish() {
-		ArduinoTarget target = new ArduinoTarget(page.name, page.portName, page.board);
+		ArduinoTarget target;
+		try {
+			target = new ArduinoTarget(targetRegistry, page.name, page.portName, page.board);
+		} catch (CoreException e) {
+			Activator.getDefault().getLog().log(e.getStatus());
+			return false;
+		}
 		targetRegistry.addTarget(target);
 		return true;
 	}

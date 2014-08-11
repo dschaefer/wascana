@@ -36,7 +36,7 @@ public class ArduinoLaunchTarget implements ILaunchTarget {
 
 	@Override
 	public void setActive() {
-		type.targetRegistry.setActiveTarget(target);
+		type.getTargetRegistry().setActiveTarget(target);
 	}
 
 }

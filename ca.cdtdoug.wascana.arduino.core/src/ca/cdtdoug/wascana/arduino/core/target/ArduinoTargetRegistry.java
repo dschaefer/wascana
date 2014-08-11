@@ -3,7 +3,6 @@ package ca.cdtdoug.wascana.arduino.core.target;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -11,11 +10,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.Platform;
+
 import ca.cdtdoug.wascana.arduino.core.ArduinoHome;
+import ca.cdtdoug.wascana.arduino.core.internal.Activator;
 
 public class ArduinoTargetRegistry {
 
-	private List<Board> boards = new ArrayList<>();
+	private Map<String, Board> boards = new HashMap<>();
 	private Map<String, ArduinoTarget> targets = new HashMap<>();
 	private List<Listener> listeners = new LinkedList<>();
 	private ArduinoTarget activeTarget;
@@ -27,10 +30,15 @@ public class ArduinoTargetRegistry {
 
 	public ArduinoTargetRegistry() {
 		loadBoardFiles();
+		loadTargetFiles();
 	}
 
 	public Board[] getBoards() {
-		return boards.toArray(new Board[boards.size()]);
+		return boards.values().toArray(new Board[boards.size()]);
+	}
+
+	public Board getBoard(String id) {
+		return boards.get(id);
 	}
 
 	private void loadBoardFiles() {
@@ -54,7 +62,7 @@ public class ArduinoTargetRegistry {
 				String propertyName = (String) i.nextElement();
 				String[] names = propertyName.split("\\.");
 				if (names.length == 2 && names[1].equals("name")) {
-					boards.add(new Board(names[0], boardProps));
+					boards.put(names[0], new Board(names[0], boardProps));
 				}
 			}
 		} catch (IOException e) {
@@ -96,4 +104,23 @@ public class ArduinoTargetRegistry {
 		return activeTarget;
 	}
 
+	private void loadTargetFiles() {
+		for (File targetFile : getTargetsDir().listFiles()) {
+			try { 
+				addTarget(new ArduinoTarget(this, targetFile));
+			} catch (CoreException e) {
+				Activator.getPlugin().getLog().log(e.getStatus());
+			}
+		}
+		
+	}
+
+	File getTargetsDir() {
+		File stateLocation = Platform.getStateLocation(Activator.getContext().getBundle()).toFile();
+		File targetsDir = new File(stateLocation, "targets");
+		if (!targetsDir.exists())
+			targetsDir.mkdirs();
+		return targetsDir;
+	}
+	
 }

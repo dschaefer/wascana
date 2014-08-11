@@ -4,16 +4,20 @@ import java.util.Properties;
 
 public class Board {
 
-	private final String key;
+	private final String id;
 	private final Properties properties;
 
 	public Board(String key, Properties properties) {
-		this.key = key + ".";
+		this.id = key + ".";
 		this.properties = properties;
 	}
 
+	public String getId() {
+		return id;
+	}
+
 	public String getProperty(String localKey) {
-		return properties.getProperty(key + localKey);
+		return properties.getProperty(id + localKey);
 	}
 
 	public String getName() {
