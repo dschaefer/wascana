@@ -1,4 +1,6 @@
-package ca.cdtdoug.wascana.arduino.core.launch;
+package ca.cdtdoug.wascana.arduino.ui.launch;
+
+import java.io.IOException;
 
 import jssc.SerialPortException;
 
@@ -14,9 +16,9 @@ import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.model.LaunchConfigurationDelegate;
 import org.osgi.framework.ServiceReference;
 
-import ca.cdtdoug.wascana.arduino.core.internal.Activator;
 import ca.cdtdoug.wascana.arduino.core.target.ArduinoTarget;
 import ca.cdtdoug.wascana.arduino.core.target.ArduinoTargetRegistry;
+import ca.cdtdoug.wascana.arduino.ui.internal.Activator;
 
 public class ArduinoLaunchConfigurationDelegate extends LaunchConfigurationDelegate {
 
@@ -38,25 +40,39 @@ public class ArduinoLaunchConfigurationDelegate extends LaunchConfigurationDeleg
 			final ILaunch launch, IProgressMonitor monitor) throws CoreException {
 		new Job("Arduino Launch") {
 			protected IStatus run(IProgressMonitor monitor) {
-				ServiceReference<ArduinoTargetRegistry> serviceRef = Activator.getContext().getServiceReference(ArduinoTargetRegistry.class);
-				if (serviceRef == null) {
-					return new Status(IStatus.ERROR, Activator.getId(), "No Target Registry");
-				}
-				ArduinoTargetRegistry targetRegistry = Activator.getContext().getService(serviceRef);
+				ServiceReference<ArduinoTargetRegistry> registryRef = Activator.getContext().getServiceReference(ArduinoTargetRegistry.class);
+				ArduinoTargetRegistry targetRegistry = Activator.getContext().getService(registryRef);
 				ArduinoTarget target = targetRegistry.getActiveTarget();
+				
+				ServiceReference<ArduinoLaunchConsoleService> consoleRef = Activator.getContext().getServiceReference(ArduinoLaunchConsoleService.class);
+				ArduinoLaunchConsoleService consoleService = Activator.getContext().getService(consoleRef);
 
 				try {
 					target.pauseSerialPort();
 
-					// TODO call make target to bootload
+					// The build configuration
+					
+					// The build directory
+					
+					// The build environment
+					
+					// The build command
+					
+					// Run the process and capture the results in the console
+					Process process = Runtime.getRuntime().exec("echo hi", null, null);
+					consoleService.monitor(process);
 
 					target.resumeSerialPort();
 				} catch (SerialPortException e) {
 					return new Status(IStatus.ERROR, Activator.getId(), e.getLocalizedMessage(), e);
+				} catch (IOException e) {
+					return new Status(IStatus.ERROR, Activator.getId(), e.getLocalizedMessage(), e);
+				} finally {
+					DebugPlugin.getDefault().getLaunchManager().removeLaunch(launch);
+					Activator.getContext().ungetService(registryRef);
+					Activator.getContext().ungetService(consoleRef);
 				}
 
-				DebugPlugin.getDefault().getLaunchManager().removeLaunch(launch);
-				Activator.getContext().ungetService(serviceRef);
 				return Status.OK_STATUS;
 			};
 		}.schedule();

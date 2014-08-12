@@ -51,5 +51,13 @@
             project="false">
       </wizard>
    </extension>
-
+   <extension
+         point="org.eclipse.debug.core.launchConfigurationTypes">
+      <launchConfigurationType
+            delegate="ca.cdtdoug.wascana.arduino.ui.launch.ArduinoLaunchConfigurationDelegate"
+            id="ca.cdtdoug.wascana.arduino.core.launchConfigurationType"
+            modes="run"
+            name="Arduino">
+      </launchConfigurationType>
+   </extension>
 </plugin>

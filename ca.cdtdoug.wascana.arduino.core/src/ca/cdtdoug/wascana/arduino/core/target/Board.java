@@ -8,7 +8,7 @@ public class Board {
 	private final Properties properties;
 
 	public Board(String key, Properties properties) {
-		this.id = key + ".";
+		this.id = key;
 		this.properties = properties;
 	}
 
@@ -17,7 +17,7 @@ public class Board {
 	}
 
 	public String getProperty(String localKey) {
-		return properties.getProperty(id + localKey);
+		return properties.getProperty(id + '.' + localKey);
 	}
 
 	public String getName() {

@@ -22,10 +22,13 @@
                name="Arduino">
          </targetPlatform>
          <builder
+               autoBuildTarget="all"
                buildRunner="org.eclipse.cdt.managedbuilder.core.ExternalBuildRunner"
+               cleanBuildTarget="clean"
                command="make"
                commandLauncher="org.eclipse.cdt.core.CommandLauncher"
                id="ca.cdtdoug.wascana.arduino.builder.make"
+               incrementalBuildTarget="all"
                isAbstract="false"
                isVariableCaseSensitive="false"
                name="Arduino Make">
@@ -38,6 +41,18 @@
                natureFilter="ccnature"
                superClass="cdt.managedbuild.tool.gnu.cpp.compiler.base">
          </tool>
+         <option
+               category="ca.cdtdoug.wascana.arduino.core.optionCategory.board"
+               id="ca.cdtdoug.wascana.arduino.core.option.board"
+               isAbstract="false"
+               name="Board Type"
+               resourceFilter="all"
+               valueType="string">
+         </option>
+         <optionCategory
+               id="ca.cdtdoug.wascana.arduino.core.optionCategory.board"
+               name="Board Type">
+         </optionCategory>
       </toolChain>
    </extension>
    <extension
@@ -62,28 +77,18 @@
    <extension
          point="org.eclipse.cdt.launchbar.core.launchBarContributions">
       <targetType
-            class="ca.cdtdoug.wascana.arduino.core.launch.ArduinoLaunchTargetType"
+            class="ca.cdtdoug.wascana.arduino.core.launchbar.ArduinoLaunchTargetType"
             id="ca.cdtdoug.wascana.arduino.core.targetType">
       </targetType>
       <descriptorType
-            class="ca.cdtdoug.wascana.arduino.core.launch.ArduinoLaunchDescriptorType"
+            class="ca.cdtdoug.wascana.arduino.core.launchbar.ArduinoLaunchDescriptorType"
             id="ca.cdtdoug.wascana.arduino.core.descriptorType"
             priority="5">
       </descriptorType>
       <configProvider
-            class="ca.cdtdoug.wascana.arduino.core.launch.ArduinoLaunchConfigurationProvider"
+            class="ca.cdtdoug.wascana.arduino.core.launchbar.ArduinoLaunchConfigurationProvider"
             descriptorType="ca.cdtdoug.wascana.arduino.core.descriptorType"
             targetType="ca.cdtdoug.wascana.arduino.core.targetType">
       </configProvider>
    </extension>
-   <extension
-         point="org.eclipse.debug.core.launchConfigurationTypes">
-      <launchConfigurationType
-            delegate="ca.cdtdoug.wascana.arduino.core.launch.ArduinoLaunchConfigurationDelegate"
-            id="ca.cdtdoug.wascana.arduino.core.launchConfigurationType"
-            modes="run"
-            name="Arduino">
-      </launchConfigurationType>
-   </extension>
-
 </plugin>

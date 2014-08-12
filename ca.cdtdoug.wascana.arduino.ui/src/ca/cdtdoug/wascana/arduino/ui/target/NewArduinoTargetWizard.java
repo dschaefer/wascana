@@ -8,7 +8,7 @@ import org.eclipse.ui.IWorkbench;
 
 import ca.cdtdoug.wascana.arduino.core.target.ArduinoTarget;
 import ca.cdtdoug.wascana.arduino.core.target.ArduinoTargetRegistry;
-import ca.cdtdoug.wascana.arduino.ui.Activator;
+import ca.cdtdoug.wascana.arduino.ui.internal.Activator;
 
 public class NewArduinoTargetWizard extends Wizard implements INewWizard {
 

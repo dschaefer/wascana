@@ -35,6 +35,10 @@ avr-objcopy -O ihex -j .eeprom --set-section-flags=.eeprom=alloc,load \
 	$(OUTPUT_DIR)/$(EXE).elf  $(OUTPUT_DIR)/$(EXE).eep
 endef
 
+define do_load_avrdude
+@echo avrdude blah blah blah 
+endef
+
 endif # ARCH = avr
 
 INCLUDES = -I$(ARDUINO_HOME)/hardware/arduino/$(ARCH)/cores/$(CORE) \
@@ -52,12 +56,15 @@ SRCS = $(call rwildcard, $(SRC_ROOT), *.c *.cpp)
 OBJS = $(patsubst %.cpp, $(OUTPUT_DIR)/%.o, $(filter %.cpp, $(SRCS))) \
        $(patsubst %.c, $(OUTPUT_DIR)/%.o, $(filter %.c, $(SRCS)))
 
-all: $(OUTPUT_DIR)/$(EXE).elf
+all:	$(OUTPUT_DIR)/$(EXE).hex
 
 clean:
 	rm -fr $(OUTPUT_DIR)
 
-$(OUTPUT_DIR)/$(EXE).elf:	$(OBJS) $(OUTPUT_DIR)/core.a
+load:	#$(OUTPUT_DIR)/$(EXE).hex
+	$(do_load_$(LOADER))
+
+$(OUTPUT_DIR)/$(EXE).hex:	$(OBJS) $(OUTPUT_DIR)/core.a
 	$(do_link)
 
 $(OUTPUT_DIR)/core.a: $(LIB_OBJS)
