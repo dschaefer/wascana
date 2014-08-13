@@ -4,9 +4,6 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 
-import ca.cdtdoug.wascana.arduino.ui.launch.ArduinoLaunchConsole;
-import ca.cdtdoug.wascana.arduino.ui.launch.ArduinoLaunchConsoleService;
-
 /**
  * The activator class controls the plug-in life cycle
  */
@@ -27,7 +24,6 @@ public class Activator extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
-		context.registerService(ArduinoLaunchConsoleService.class, new ArduinoLaunchConsole(), null);
 	}
 
 	public void stop(BundleContext context) throws Exception {

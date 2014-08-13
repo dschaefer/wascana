@@ -1,4 +1,4 @@
-package ca.cdtdoug.wascana.arduino.ui.launch;
+package ca.cdtdoug.wascana.arduino.core.launch;
 
 import java.io.IOException;
 
@@ -6,8 +6,12 @@ import jssc.SerialPortException;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IExtension;
+import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.InvalidRegistryObjectException;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.debug.core.DebugPlugin;
@@ -16,10 +20,12 @@ import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.model.LaunchConfigurationDelegate;
 import org.osgi.framework.ServiceReference;
 
+import ca.cdtdoug.wascana.arduino.core.internal.Activator;
 import ca.cdtdoug.wascana.arduino.core.target.ArduinoTarget;
 import ca.cdtdoug.wascana.arduino.core.target.ArduinoTargetRegistry;
-import ca.cdtdoug.wascana.arduino.ui.internal.Activator;
 
+// TODO move this back down to the core. Need to set up declarative services
+// so that the console service loads when we launch.
 public class ArduinoLaunchConfigurationDelegate extends LaunchConfigurationDelegate {
 
 	@Override
@@ -44,10 +50,9 @@ public class ArduinoLaunchConfigurationDelegate extends LaunchConfigurationDeleg
 				ArduinoTargetRegistry targetRegistry = Activator.getContext().getService(registryRef);
 				ArduinoTarget target = targetRegistry.getActiveTarget();
 				
-				ServiceReference<ArduinoLaunchConsoleService> consoleRef = Activator.getContext().getServiceReference(ArduinoLaunchConsoleService.class);
-				ArduinoLaunchConsoleService consoleService = Activator.getContext().getService(consoleRef);
-
 				try {
+					ArduinoLaunchConsoleService consoleService = getConsoleService();
+
 					target.pauseSerialPort();
 
 					// The build configuration
@@ -63,6 +68,8 @@ public class ArduinoLaunchConfigurationDelegate extends LaunchConfigurationDeleg
 					consoleService.monitor(process);
 
 					target.resumeSerialPort();
+				} catch (CoreException e) {
+					return e.getStatus();
 				} catch (SerialPortException e) {
 					return new Status(IStatus.ERROR, Activator.getId(), e.getLocalizedMessage(), e);
 				} catch (IOException e) {
@@ -70,12 +77,18 @@ public class ArduinoLaunchConfigurationDelegate extends LaunchConfigurationDeleg
 				} finally {
 					DebugPlugin.getDefault().getLaunchManager().removeLaunch(launch);
 					Activator.getContext().ungetService(registryRef);
-					Activator.getContext().ungetService(consoleRef);
 				}
 
 				return Status.OK_STATUS;
 			};
 		}.schedule();
+	}
+
+	private ArduinoLaunchConsoleService getConsoleService() throws CoreException {
+		IExtensionPoint point = Platform.getExtensionRegistry().getExtensionPoint(Activator.getId(), "consoleService");
+		// should only be one
+		IExtension extension = point.getExtensions()[0];
+		return (ArduinoLaunchConsoleService) extension.getConfigurationElements()[0].createExecutableExtension("class");
 	}
 
 }

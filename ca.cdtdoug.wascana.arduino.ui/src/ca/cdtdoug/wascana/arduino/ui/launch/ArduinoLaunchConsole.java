@@ -14,6 +14,8 @@ import org.eclipse.ui.console.IOConsoleOutputStream;
 import org.eclipse.ui.console.MessageConsole;
 import org.eclipse.ui.progress.UIJob;
 
+import ca.cdtdoug.wascana.arduino.core.launch.ArduinoLaunchConsoleService;
+
 public class ArduinoLaunchConsole implements ArduinoLaunchConsoleService {
 	
 	private MessageConsole console;

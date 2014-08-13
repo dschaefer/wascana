@@ -1,4 +1,4 @@
-package ca.cdtdoug.wascana.arduino.core.launchbar;
+package ca.cdtdoug.wascana.arduino.core.launch;
 
 import org.eclipse.cdt.core.model.CoreModel;
 import org.eclipse.cdt.core.settings.model.ICConfigurationDescription;

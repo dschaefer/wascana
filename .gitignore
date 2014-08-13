@@ -1,4 +1,5 @@
 */target/
+*/bin/
 */*.zip
 */*.tar.gz
 */rootfiles*

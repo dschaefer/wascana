@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
+   <extension-point id="consoleService" name="Arduino Launch Console Service" schema="schema/consoleService.exsd"/>
    <extension
          point="org.eclipse.cdt.managedbuilder.core.buildDefinitions">
       <managedBuildRevision
@@ -77,18 +78,27 @@
    <extension
          point="org.eclipse.cdt.launchbar.core.launchBarContributions">
       <targetType
-            class="ca.cdtdoug.wascana.arduino.core.launchbar.ArduinoLaunchTargetType"
+            class="ca.cdtdoug.wascana.arduino.core.launch.ArduinoLaunchTargetType"
             id="ca.cdtdoug.wascana.arduino.core.targetType">
       </targetType>
       <descriptorType
-            class="ca.cdtdoug.wascana.arduino.core.launchbar.ArduinoLaunchDescriptorType"
+            class="ca.cdtdoug.wascana.arduino.core.launch.ArduinoLaunchDescriptorType"
             id="ca.cdtdoug.wascana.arduino.core.descriptorType"
             priority="5">
       </descriptorType>
       <configProvider
-            class="ca.cdtdoug.wascana.arduino.core.launchbar.ArduinoLaunchConfigurationProvider"
+            class="ca.cdtdoug.wascana.arduino.core.launch.ArduinoLaunchConfigurationProvider"
             descriptorType="ca.cdtdoug.wascana.arduino.core.descriptorType"
             targetType="ca.cdtdoug.wascana.arduino.core.targetType">
       </configProvider>
+   </extension>
+   <extension
+         point="org.eclipse.debug.core.launchConfigurationTypes">
+      <launchConfigurationType
+            delegate="ca.cdtdoug.wascana.arduino.core.launch.ArduinoLaunchConfigurationDelegate"
+            id="ca.cdtdoug.wascana.arduino.core.launchConfigurationType"
+            modes="run"
+            name="Arduino">
+      </launchConfigurationType>
    </extension>
 </plugin>

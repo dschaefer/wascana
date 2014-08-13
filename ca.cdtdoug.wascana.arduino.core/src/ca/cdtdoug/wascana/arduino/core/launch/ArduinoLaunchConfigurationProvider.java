@@ -1,4 +1,4 @@
-package ca.cdtdoug.wascana.arduino.core.launchbar;
+package ca.cdtdoug.wascana.arduino.core.launch;
 
 import org.eclipse.cdt.launchbar.core.ILaunchBarManager;
 import org.eclipse.cdt.launchbar.core.ILaunchConfigurationProvider;

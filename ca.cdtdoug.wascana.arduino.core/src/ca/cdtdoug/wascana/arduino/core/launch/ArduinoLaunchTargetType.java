@@ -1,4 +1,4 @@
-package ca.cdtdoug.wascana.arduino.core.launchbar;
+package ca.cdtdoug.wascana.arduino.core.launch;
 
 import java.util.HashMap;
 import java.util.Map;
