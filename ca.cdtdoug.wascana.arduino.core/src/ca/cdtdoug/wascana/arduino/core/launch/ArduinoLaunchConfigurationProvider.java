@@ -3,10 +3,13 @@ package ca.cdtdoug.wascana.arduino.core.launch;
 import org.eclipse.cdt.launchbar.core.ILaunchBarManager;
 import org.eclipse.cdt.launchbar.core.ILaunchConfigurationProvider;
 import org.eclipse.cdt.launchbar.core.ILaunchDescriptor;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationType;
+import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 
 public class ArduinoLaunchConfigurationProvider implements ILaunchConfigurationProvider {
 
@@ -22,9 +25,16 @@ public class ArduinoLaunchConfigurationProvider implements ILaunchConfigurationP
 
 	@Override
 	public ILaunchConfiguration getLaunchConfiguration(ILaunchDescriptor descriptor) throws CoreException {
+		if (!(descriptor instanceof ArduinoLaunchDescriptor))
+			return null;
+		
 		String descName = descriptor.getName();
 		String name = DebugPlugin.getDefault().getLaunchManager().generateLaunchConfigurationName(descName);
-		return getLaunchConfigurationType(descriptor).newInstance(null, name);
+
+		ILaunchConfigurationWorkingCopy workingCopy = getLaunchConfigurationType(descriptor).newInstance(null, name);
+		IProject project = ((ArduinoLaunchDescriptor) descriptor).getProject();
+		workingCopy.setMappedResources(new IResource[] { project });
+		return workingCopy.doSave();
 	}
 
 	@Override

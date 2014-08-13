@@ -13,7 +13,7 @@ public class ArduinoLaunchDescriptor implements ILaunchDescriptor {
 		this.project = project;
 		this.type = type;
 	}
-	
+
 	@Override
 	public String getName() {
 		return project.getName();
@@ -27,6 +27,10 @@ public class ArduinoLaunchDescriptor implements ILaunchDescriptor {
 	@Override
 	public ILaunchDescriptorType getType() {
 		return type;
+	}
+
+	public IProject getProject() {
+		return project;
 	}
 
 }

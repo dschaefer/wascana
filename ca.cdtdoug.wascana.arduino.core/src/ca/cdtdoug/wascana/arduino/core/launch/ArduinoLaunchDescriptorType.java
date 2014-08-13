@@ -11,10 +11,14 @@ import org.eclipse.cdt.managedbuilder.core.IToolChain;
 import org.eclipse.cdt.managedbuilder.core.ManagedBuildManager;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.debug.core.ILaunchConfiguration;
 
 public class ArduinoLaunchDescriptorType implements ILaunchDescriptorType {
 
 	private ILaunchBarManager manager;
+	
+	public static final String avrToolChainId = "ca.cdtdoug.wascana.arduino.toolChain.avr";
+	public static final String arduinoLaunchConfigTypeId = "ca.cdtdoug.wascana.arduino.core.launchConfigurationType";
 
 	@Override
 	public String getId() {
@@ -28,20 +32,26 @@ public class ArduinoLaunchDescriptorType implements ILaunchDescriptorType {
 
 	@Override
 	public boolean ownsLaunchObject(Object element) throws CoreException {
-		if (!(element instanceof IProject)) {
-			return false;
+		if (element instanceof IProject) {
+			return ownsProject((IProject) element);
 		}
 
-		IProject project = (IProject) element;
-		ICProjectDescription pdesc = CoreModel.getDefault().getProjectDescription(project);
-		if (pdesc == null) {
-			return false;
+		if (element instanceof ILaunchConfiguration) {
+			return ((ILaunchConfiguration) element).getType().getIdentifier().equals(arduinoLaunchConfigTypeId);
 		}
 
-		for (ICConfigurationDescription cdesc : pdesc.getConfigurations()) {
-			IConfiguration config = ManagedBuildManager.getConfigurationForDescription(cdesc);
+		return false;
+	}
+
+	private boolean ownsProject(IProject project) {
+		ICProjectDescription projDesc = CoreModel.getDefault().getProjectDescription(project);
+		if (projDesc == null) // Not a CDT project
+			return false;
+
+		for (ICConfigurationDescription configDesc : projDesc.getConfigurations()) {
+			IConfiguration config = ManagedBuildManager.getConfigurationForDescription(configDesc);
 			IToolChain toolchain = config.getToolChain();
-			IToolChain avrToolchain = ManagedBuildManager.getExtensionToolChain("ca.cdtdoug.wascana.arduino.toolChain.avr");
+			IToolChain avrToolchain = ManagedBuildManager.getExtensionToolChain(avrToolChainId);
 			if (toolchain.matches(avrToolchain))
 				return true;
 		}
@@ -51,7 +61,7 @@ public class ArduinoLaunchDescriptorType implements ILaunchDescriptorType {
 
 	@Override
 	public ILaunchDescriptor getDescriptor(Object element) throws CoreException {
-		if (ownsLaunchObject(element))
+		if (element instanceof IProject && ownsProject((IProject) element))
 			return new ArduinoLaunchDescriptor(this, (IProject) element);
 		return null;
 	}
