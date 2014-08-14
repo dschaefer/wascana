@@ -27,12 +27,11 @@ import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.model.LaunchConfigurationDelegate;
 import org.osgi.util.tracker.ServiceTracker;
 
+import ca.cdtdoug.wascana.arduino.core.ArduinoProjectGenerator;
 import ca.cdtdoug.wascana.arduino.core.internal.Activator;
 import ca.cdtdoug.wascana.arduino.core.target.ArduinoTarget;
 import ca.cdtdoug.wascana.arduino.core.target.ArduinoTargetRegistry;
 
-// TODO move this back down to the core. Need to set up declarative services
-// so that the console service loads when we launch.
 public class ArduinoLaunchConfigurationDelegate extends LaunchConfigurationDelegate {
 
 	private final ServiceTracker<ArduinoTargetRegistry, ArduinoTargetRegistry> targetRegistryServiceTracker;
@@ -60,7 +59,7 @@ public class ArduinoLaunchConfigurationDelegate extends LaunchConfigurationDeleg
 		boolean newConfig = false;
 		if (configDesc == null) {
 			ArduinoTarget target = targetRegistry.getActiveTarget();
-			configDesc = target.createBuildConfigurationForTarget(projDesc);
+			configDesc = ArduinoProjectGenerator.createBuildConfigurationForTarget(projDesc, target.getBoard());
 			newConfig = true;
 		}
 		if (newConfig || !projDesc.getActiveConfiguration().equals(configDesc)) {

@@ -5,9 +5,13 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
 
-import ca.cdtdoug.wascana.arduino.core.ArduinoProjectNature;
+import ca.cdtdoug.wascana.arduino.core.ArduinoProjectGenerator;
+import ca.cdtdoug.wascana.arduino.ui.internal.Activator;
 
 public class NewArduinoProjectWizard extends BasicNewProjectResourceWizard {
 
@@ -24,7 +28,19 @@ public class NewArduinoProjectWizard extends BasicNewProjectResourceWizard {
 		new Job("Creating Aurdino Project") {
 			protected IStatus run(IProgressMonitor monitor) {
 				try {
-					ArduinoProjectNature.setupArduinoProject(getNewProject(), monitor);
+					final ArduinoProjectGenerator generator = new ArduinoProjectGenerator(getNewProject());
+					generator.setupArduinoProject(monitor);
+					getWorkbench().getDisplay().asyncExec(new Runnable() {
+						@Override
+						public void run() {
+							try {
+								IWorkbenchPage activePage = getWorkbench().getActiveWorkbenchWindow().getActivePage();
+								IDE.openEditor(activePage, generator.getSourceFile());
+							} catch (PartInitException e) {
+								Activator.getDefault().getLog().log(e.getStatus());
+							}
+						}
+					});
 					return Status.OK_STATUS;
 				} catch (CoreException e) {
 					return e.getStatus();

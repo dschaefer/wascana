@@ -1,2 +1,3 @@
-all:
-	@echo Hi!
+EXE = ${projectName}
+
+include $(ARDUINO_HOME)/arduino.mk

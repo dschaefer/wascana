@@ -1,5 +1,8 @@
 VERSION = 156
 
+BOARD ?= uno
+OUTPUT_DIR ?= build/Default
+
 rwildcard = $(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2) $(filter $(subst *,%,$2),$d))
 
 ifeq ($(BOARD),uno)
@@ -51,7 +54,7 @@ LIB_SRCS = $(call rwildcard, $(LIB_ROOT)/, *.c *.cpp)
 LIB_OBJS = $(patsubst $(LIB_ROOT)/%.c, $(OUTPUT_DIR)/arduino/%.o, $(filter %.c, $(LIB_SRCS))) \
            $(patsubst $(LIB_ROOT)/%.cpp, $(OUTPUT_DIR)/arduino/%.o, $(filter %.cpp, $(LIB_SRCS)))
 
-SRCS = $(call rwildcard, $(SRC_ROOT), *.c *.cpp)
+SRCS = $(call rwildcard, ./, *.c *.cpp)
 
 OBJS = $(patsubst %.cpp, $(OUTPUT_DIR)/%.o, $(filter %.cpp, $(SRCS))) \
        $(patsubst %.c, $(OUTPUT_DIR)/%.o, $(filter %.c, $(SRCS)))
