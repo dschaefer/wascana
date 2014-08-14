@@ -7,15 +7,11 @@ import jssc.SerialPortException;
 import org.eclipse.cdt.core.CCorePlugin;
 import org.eclipse.cdt.core.settings.model.ICConfigurationDescription;
 import org.eclipse.cdt.core.settings.model.ICProjectDescription;
-import org.eclipse.cdt.core.settings.model.extension.CConfigurationData;
 import org.eclipse.cdt.managedbuilder.core.BuildException;
 import org.eclipse.cdt.managedbuilder.core.IConfiguration;
 import org.eclipse.cdt.managedbuilder.core.IOption;
 import org.eclipse.cdt.managedbuilder.core.IToolChain;
 import org.eclipse.cdt.managedbuilder.core.ManagedBuildManager;
-import org.eclipse.cdt.managedbuilder.internal.core.Configuration;
-import org.eclipse.cdt.managedbuilder.internal.core.ManagedProject;
-import org.eclipse.cdt.managedbuilder.internal.core.ToolChain;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IExtension;
@@ -47,13 +43,13 @@ public class ArduinoLaunchConfigurationDelegate extends LaunchConfigurationDeleg
 		targetRegistryServiceTracker.open();
 		targetRegistry = targetRegistryServiceTracker.getService();
 	}
-	
+
 	@Override
 	protected void finalize() throws Throwable {
 		super.finalize();
 		targetRegistryServiceTracker.close();
 	}
-	
+
 	@Override
 	public boolean buildForLaunch(ILaunchConfiguration configuration,
 			String mode, IProgressMonitor monitor) throws CoreException {
@@ -63,7 +59,8 @@ public class ArduinoLaunchConfigurationDelegate extends LaunchConfigurationDeleg
 		ICConfigurationDescription configDesc = getBuildConfiguration(projDesc);
 		boolean newConfig = false;
 		if (configDesc == null) {
-			configDesc = createBuildConfiguration(projDesc);
+			ArduinoTarget target = targetRegistry.getActiveTarget();
+			configDesc = target.createBuildConfigurationForTarget(projDesc);
 			newConfig = true;
 		}
 		if (newConfig || !projDesc.getActiveConfiguration().equals(configDesc)) {
@@ -89,20 +86,20 @@ public class ArduinoLaunchConfigurationDelegate extends LaunchConfigurationDeleg
 			protected IStatus run(IProgressMonitor monitor) {
 				ArduinoTargetRegistry targetRegistry = targetRegistryServiceTracker.getService();
 				ArduinoTarget target = targetRegistry.getActiveTarget();
-				
+
 				try {
 					ArduinoLaunchConsoleService consoleService = getConsoleService();
 
 					target.pauseSerialPort();
 
 					// The build configuration
-					
+
 					// The build directory
-					
+
 					// The build environment
-					
+
 					// The build command
-					
+
 					// Run the process and capture the results in the console
 					Process process = Runtime.getRuntime().exec("echo hi", null, null);
 					consoleService.monitor(process);
@@ -138,7 +135,11 @@ public class ArduinoLaunchConfigurationDelegate extends LaunchConfigurationDeleg
 	private ICConfigurationDescription getBuildConfiguration(ICProjectDescription projDesc) throws CoreException {
 		ArduinoTarget target = targetRegistry.getActiveTarget();
 		String boardId = target.getBoard().getId();
-		
+
+		ICConfigurationDescription[] configDescs = projDesc.getConfigurations();
+		if (configDescs == null)
+			return null;
+
 		for (ICConfigurationDescription configDesc : projDesc.getConfigurations()) {
 			IConfiguration config = ManagedBuildManager.getConfigurationForDescription(configDesc);
 			IToolChain toolChain = config.getToolChain();
@@ -155,25 +156,6 @@ public class ArduinoLaunchConfigurationDelegate extends LaunchConfigurationDeleg
 		}
 
 		return null;
-	}
-	
-	private ICConfigurationDescription createBuildConfiguration(ICProjectDescription projDesc) throws CoreException {
-		ArduinoTarget target = targetRegistry.getActiveTarget();
-		String boardId = target.getBoard().getId();
-
-		// Need a new one
-		ManagedProject managedProject = new ManagedProject(projDesc);
-		String configId = ManagedBuildManager.calculateChildId(ArduinoLaunchDescriptorType.avrToolChainId, null);
-		IToolChain avrToolChain = ManagedBuildManager.getExtensionToolChain(ArduinoLaunchDescriptorType.avrToolChainId);
-		Configuration newConfig = new Configuration(managedProject, (ToolChain) avrToolChain, configId, target.getBoard().getName());
-		IToolChain newToolChain = newConfig.getToolChain();
-		IOption newOption = newToolChain.getOptionBySuperClassId("ca.cdtdoug.wascana.arduino.core.option.board");
-		ManagedBuildManager.setOption(newConfig, newToolChain, newOption, boardId);
-
-		CConfigurationData data = newConfig.getConfigurationData();
-		ICConfigurationDescription newConfigDesc = projDesc.createConfiguration(ManagedBuildManager.CFG_DATA_PROVIDER_ID, data);
-
-		return newConfigDesc;
 	}
 
 }

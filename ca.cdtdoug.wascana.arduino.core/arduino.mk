@@ -23,8 +23,8 @@ AR = avr-ar
 OBJCOPY = avr-objcopy
 
 define do_link
-$(CC) -Os -Wl,--gc-sections -mmcu=$(MCU) -o $@ $^
-avr-objcopy -O ihex -R .eeprom $(OUTPUT_DIR)/$(EXE).elf  $(OUTPUT_DIR)/$(EXE).hex
+$(CC) -Os -Wl,--gc-sections -mmcu=$(MCU) -o $(OUTPUT_DIR)/$(EXE).elf $^
+avr-objcopy -O ihex -R .eeprom $(OUTPUT_DIR)/$(EXE).elf $(OUTPUT_DIR)/$(EXE).hex
 $(do_link_extra)
 avr-size $(OUTPUT_DIR)/$(EXE).elf
 endef

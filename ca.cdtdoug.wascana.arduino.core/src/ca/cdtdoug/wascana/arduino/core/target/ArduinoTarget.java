@@ -9,11 +9,23 @@ import java.util.Properties;
 import jssc.SerialPort;
 import jssc.SerialPortException;
 
+import org.eclipse.cdt.core.settings.model.ICConfigurationDescription;
+import org.eclipse.cdt.core.settings.model.ICProjectDescription;
+import org.eclipse.cdt.core.settings.model.WriteAccessException;
+import org.eclipse.cdt.core.settings.model.extension.CConfigurationData;
+import org.eclipse.cdt.managedbuilder.core.IBuilder;
+import org.eclipse.cdt.managedbuilder.core.IOption;
+import org.eclipse.cdt.managedbuilder.core.IToolChain;
+import org.eclipse.cdt.managedbuilder.core.ManagedBuildManager;
+import org.eclipse.cdt.managedbuilder.internal.core.Configuration;
+import org.eclipse.cdt.managedbuilder.internal.core.ManagedProject;
+import org.eclipse.cdt.managedbuilder.internal.core.ToolChain;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 
 import ca.cdtdoug.wascana.arduino.core.internal.Activator;
+import ca.cdtdoug.wascana.arduino.core.launch.ArduinoLaunchDescriptorType;
 
 public class ArduinoTarget {
 
@@ -114,6 +126,19 @@ public class ArduinoTarget {
 		
 		serialPort.openPort();
 		serialPort.setParams(baudRate, dataBits, stopBits, parity);
+	}
+
+	public ICConfigurationDescription createBuildConfigurationForTarget(ICProjectDescription projDesc) throws CoreException {
+		ManagedProject managedProject = new ManagedProject(projDesc);
+		String configId = ManagedBuildManager.calculateChildId(ArduinoLaunchDescriptorType.avrToolChainId, null);
+		IToolChain avrToolChain = ManagedBuildManager.getExtensionToolChain(ArduinoLaunchDescriptorType.avrToolChainId);
+		Configuration newConfig = new Configuration(managedProject, (ToolChain) avrToolChain, configId, board.getId());
+		IToolChain newToolChain = newConfig.getToolChain();
+		IOption newOption = newToolChain.getOptionBySuperClassId("ca.cdtdoug.wascana.arduino.core.option.board");
+		ManagedBuildManager.setOption(newConfig, newToolChain, newOption, board.getId());
+
+		CConfigurationData data = newConfig.getConfigurationData();
+		return projDesc.createConfiguration(ManagedBuildManager.CFG_DATA_PROVIDER_ID, data);
 	}
 
 	private void save() throws CoreException {

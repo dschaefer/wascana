@@ -17,7 +17,6 @@
             osList="all"
             supportsManagedBuild="false">
          <targetPlatform
-               binaryParser="org.eclipse.cdt.core.ELF"
                id="ca.cdtdoug.wascana.arduino.targetPlatform"
                isAbstract="false"
                name="Arduino">
@@ -100,5 +99,33 @@
             modes="run"
             name="Arduino">
       </launchConfigurationType>
+   </extension>
+   <extension
+         point="org.eclipse.core.contenttype.contentTypes">
+      <content-type
+            base-type="org.eclipse.cdt.core.binaryFile"
+            file-extensions="hex"
+            id="ca.cdtdoug.wascana.arduino.core.contentType.hex"
+            name="Arduino Hex download file"
+            priority="normal">
+      </content-type>
+   </extension>
+   <extension
+         id="hexBinaryParser"
+         point="org.eclipse.cdt.core.BinaryParser">
+      <cextension>
+         <run
+               class="ca.cdtdoug.wascana.arduino.core.ArduinoHexBinaryParser">
+         </run>
+      </cextension>
+   </extension>
+   <extension
+         id="arduinoNature"
+         point="org.eclipse.core.resources.natures">
+      <runtime>
+         <run
+               class="ca.cdtdoug.wascana.arduino.core.ArduinoProjectNature">
+         </run>
+      </runtime>
    </extension>
 </plugin>

@@ -13,6 +13,9 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.ILaunchConfiguration;
 
+import ca.cdtdoug.wascana.arduino.core.ArduinoProjectNature;
+import ca.cdtdoug.wascana.arduino.core.internal.Activator;
+
 public class ArduinoLaunchDescriptorType implements ILaunchDescriptorType {
 
 	private ILaunchBarManager manager;
@@ -44,6 +47,13 @@ public class ArduinoLaunchDescriptorType implements ILaunchDescriptorType {
 	}
 
 	private boolean ownsProject(IProject project) {
+		try {
+			if (ArduinoProjectNature.hasNature(project))
+				return true;
+		} catch (CoreException e) {
+			Activator.getPlugin().getLog().log(e.getStatus());
+		}
+
 		ICProjectDescription projDesc = CoreModel.getDefault().getProjectDescription(project);
 		if (projDesc == null) // Not a CDT project
 			return false;
