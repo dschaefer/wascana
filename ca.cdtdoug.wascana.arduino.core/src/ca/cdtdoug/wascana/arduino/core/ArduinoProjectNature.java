@@ -1,8 +1,20 @@
 package ca.cdtdoug.wascana.arduino.core;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
+import java.io.Writer;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.eclipse.cdt.core.CCProjectNature;
 import org.eclipse.cdt.core.CCorePlugin;
 import org.eclipse.cdt.core.CProjectNature;
+import org.eclipse.cdt.core.model.ICContainer;
 import org.eclipse.cdt.core.settings.model.ICProjectDescription;
 import org.eclipse.cdt.core.settings.model.extension.CConfigurationData;
 import org.eclipse.cdt.managedbuilder.core.IOption;
@@ -12,17 +24,26 @@ import org.eclipse.cdt.managedbuilder.internal.core.Configuration;
 import org.eclipse.cdt.managedbuilder.internal.core.ManagedBuildInfo;
 import org.eclipse.cdt.managedbuilder.internal.core.ManagedProject;
 import org.eclipse.cdt.managedbuilder.internal.core.ToolChain;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.osgi.util.tracker.ServiceTracker;
 
 import ca.cdtdoug.wascana.arduino.core.internal.Activator;
 import ca.cdtdoug.wascana.arduino.core.launch.ArduinoLaunchDescriptorType;
 import ca.cdtdoug.wascana.arduino.core.target.ArduinoTarget;
 import ca.cdtdoug.wascana.arduino.core.target.ArduinoTargetRegistry;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
 
 public class ArduinoProjectNature implements IProjectNature {
 
@@ -49,7 +70,7 @@ public class ArduinoProjectNature implements IProjectNature {
 	}
 
 	public static void setupArduinoProject(IProject project, IProgressMonitor monitor) throws CoreException {
-		// Add the natures
+		// create the CDT-ness of the project
 		IProjectDescription projDesc = project.getDescription();
 		CCorePlugin.getDefault().createCDTProject(projDesc, project, monitor);
 		
@@ -93,12 +114,54 @@ public class ArduinoProjectNature implements IProjectNature {
 
 		CCorePlugin.getDefault().setProjectDescription(project, cprojDesc, true, monitor);
 
-		// 2. Generate the source folder and source file
+		// Generate files
+		try {
+			freemarker.template.Configuration fmConfig = new freemarker.template.Configuration();
+			URL templateDirURL = FileLocator.find(Activator.getContext().getBundle(), new Path("/templates"), null);
+			fmConfig.setDirectoryForTemplateLoading(new File(FileLocator.toFileURL(templateDirURL).toURI()));
 
-		// 3. Generate the Makefile
-
+			final Map<String, Object> fmModel = new HashMap<>();
+			fmModel.put("projectName", project.getName());
+			
+			generateFile(fmModel, fmConfig.getTemplate("Makefile"), project.getFile("Makefile"));
+			generateFile(fmModel, fmConfig.getTemplate("arduino.cpp"), project.getFile(project.getName() + ".cpp"));
+		} catch (IOException e) {
+			throw new CoreException(new Status(IStatus.ERROR, Activator.getId(), e.getLocalizedMessage(), e));
+		} catch (URISyntaxException e) {
+			throw new CoreException(new Status(IStatus.ERROR, Activator.getId(), e.getLocalizedMessage(), e));
+		} catch (TemplateException e) {
+			throw new CoreException(new Status(IStatus.ERROR, Activator.getId(), e.getLocalizedMessage(), e));
+		}
 	}
 
+	private static void generateFile(Object model, Template template, final IFile outputFile) throws TemplateException, IOException, CoreException {
+		final PipedInputStream in = new PipedInputStream();
+		PipedOutputStream out = new PipedOutputStream(in);
+		final Writer writer = new OutputStreamWriter(out);
+		Job job = new Job("Write file") {
+			protected IStatus run(IProgressMonitor monitor) {
+				try {
+					outputFile.create(in, true, monitor);
+				} catch (CoreException e) {
+					return e.getStatus();
+				}
+				return Status.OK_STATUS;
+			}
+		};
+		job.setRule(outputFile.getProject());
+		job.schedule();
+		template.process(model, writer);
+		writer.close();
+		try {
+			job.join();
+		} catch (InterruptedException e) {
+			// TODO anything?
+		}
+		IStatus status = job.getResult();
+		if (!status.isOK())
+			throw new CoreException(status);
+	}
+	
 	@Override
 	public void configure() throws CoreException {
 	}
