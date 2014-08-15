@@ -17,6 +17,8 @@ import org.eclipse.cdt.core.CProjectNature;
 import org.eclipse.cdt.core.settings.model.ICConfigurationDescription;
 import org.eclipse.cdt.core.settings.model.ICProjectDescription;
 import org.eclipse.cdt.core.settings.model.extension.CConfigurationData;
+import org.eclipse.cdt.managedbuilder.core.BuildException;
+import org.eclipse.cdt.managedbuilder.core.IConfiguration;
 import org.eclipse.cdt.managedbuilder.core.IOption;
 import org.eclipse.cdt.managedbuilder.core.IToolChain;
 import org.eclipse.cdt.managedbuilder.core.ManagedBuildManager;
@@ -37,7 +39,6 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.osgi.util.tracker.ServiceTracker;
 
 import ca.cdtdoug.wascana.arduino.core.internal.Activator;
-import ca.cdtdoug.wascana.arduino.core.launch.ArduinoLaunchDescriptorType;
 import ca.cdtdoug.wascana.arduino.core.target.ArduinoTarget;
 import ca.cdtdoug.wascana.arduino.core.target.ArduinoTargetRegistry;
 import ca.cdtdoug.wascana.arduino.core.target.Board;
@@ -45,6 +46,9 @@ import freemarker.template.Template;
 import freemarker.template.TemplateException;
 
 public class ArduinoProjectGenerator {
+
+	public static final String BOARD_OPTION_ID = "ca.cdtdoug.wascana.arduino.core.option.board";
+	public static final String AVR_TOOLCHAIN_ID = "ca.cdtdoug.wascana.arduino.toolChain.avr";
 
 	private final IProject project;
 	private IFile sourceFile;
@@ -72,9 +76,7 @@ public class ArduinoProjectGenerator {
 		ManagedProject mProj = new ManagedProject(cprojDesc);
 		info.setManagedProject(mProj);
 		
-		ServiceTracker<ArduinoTargetRegistry, ArduinoTargetRegistry> targetRegistryServiceTracker = new ServiceTracker<>(Activator.getContext(), ArduinoTargetRegistry.class, null);
-		targetRegistryServiceTracker.open();
-		ArduinoTargetRegistry targetRegistry = targetRegistryServiceTracker.getService();
+		ArduinoTargetRegistry targetRegistry = Activator.getTargetRegistry();
 		Board board = null;
 		
 		if (targetRegistry.getActiveTarget() != null) {
@@ -89,7 +91,7 @@ public class ArduinoProjectGenerator {
 			board = targetRegistry.getBoard("uno"); // the default
 		}
 		
-		createBuildConfigurationForTarget(cprojDesc, board);
+		createBuildConfiguration(cprojDesc, board);
 
 		CCorePlugin.getDefault().setProjectDescription(project, cprojDesc, true, monitor);
 
@@ -146,17 +148,32 @@ public class ArduinoProjectGenerator {
 			throw new CoreException(status);
 	}
 	
-	public static ICConfigurationDescription createBuildConfigurationForTarget(ICProjectDescription projDesc, Board board) throws CoreException {
+	public static ICConfigurationDescription createBuildConfiguration(ICProjectDescription projDesc, Board board) throws CoreException {
 		ManagedProject managedProject = new ManagedProject(projDesc);
-		String configId = ManagedBuildManager.calculateChildId(ArduinoLaunchDescriptorType.avrToolChainId, null);
-		IToolChain avrToolChain = ManagedBuildManager.getExtensionToolChain(ArduinoLaunchDescriptorType.avrToolChainId);
+		String configId = ManagedBuildManager.calculateChildId(AVR_TOOLCHAIN_ID, null);
+		IToolChain avrToolChain = ManagedBuildManager.getExtensionToolChain(AVR_TOOLCHAIN_ID);
 		org.eclipse.cdt.managedbuilder.internal.core.Configuration newConfig = new org.eclipse.cdt.managedbuilder.internal.core.Configuration(managedProject, (ToolChain) avrToolChain, configId, board.getId());
 		IToolChain newToolChain = newConfig.getToolChain();
-		IOption newOption = newToolChain.getOptionBySuperClassId("ca.cdtdoug.wascana.arduino.core.option.board");
+		IOption newOption = newToolChain.getOptionBySuperClassId(BOARD_OPTION_ID);
 		ManagedBuildManager.setOption(newConfig, newToolChain, newOption, board.getId());
 
 		CConfigurationData data = newConfig.getConfigurationData();
 		return projDesc.createConfiguration(ManagedBuildManager.CFG_DATA_PROVIDER_ID, data);
+	}
+
+	public static Board getBoard(IConfiguration configuration) throws CoreException {
+		try {
+			IToolChain toolChain = configuration.getToolChain();
+			IOption boardOption = toolChain.getOptionBySuperClassId(BOARD_OPTION_ID);
+			String boardId = boardOption.getStringValue();
+			Board board = Activator.getTargetRegistry().getBoard(boardId);
+			if (board == null)
+				board = Activator.getTargetRegistry().getBoard("uno");
+			return board;
+		} catch (BuildException e) {
+			throw new CoreException(new Status(IStatus.ERROR, Activator.getId(), e.getLocalizedMessage(), e));
+		}
+		
 	}
 
 	public IFile getSourceFile() {

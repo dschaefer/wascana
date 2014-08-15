@@ -7,18 +7,23 @@ rwildcard = $(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2) $(filter $(subs
 
 ifeq ($(BOARD),uno)
 ARCH = avr
-CORE = arduino
-VARIANT = standard
-MCU = atmega328p
-F_CPU = 16000000L
-BOARD = AVR_UNO
+BUILD_CORE = arduino
+BUILD_VARIANT = standard
+BUILD_MCU = atmega328p
+BUILD_F_CPU = 16000000L
+BUILD_BOARD = AVR_UNO
+LOADER = avrdude
+LOADER_PROTOCOL = arduino
+LOADER_SPEED = 115200
+LOADER_MAX_SIZE = 32256
+LOADER_MAX_DATA = 2048
 endif
 
 ifeq ($(ARCH),avr)
 CXXFLAGS = -g -Os -w -fno-exceptions -ffunction-sections -fdata-sections -MMD \
-	-mmcu=$(MCU) -DF_CPU=$(F_CPU) -DARDUINO=$(VERSION) -DARDUINO_$(BOARD) -DARDUINO_ARCH_AVR $(INCLUDES)
+	-mmcu=$(BUILD_MCU) -DF_CPU=$(BUILD_F_CPU) -DARDUINO=$(VERSION) -DARDUINO_$(BUILD_BOARD) -DARDUINO_ARCH_AVR $(INCLUDES)
 CFLAGS = -g -Os -w -ffunction-sections -fdata-sections -MMD \
-	-mmcu=$(MCU) -DF_CPU=$(F_CPU) -DARDUINO=156 -DARDUINO_$(BOARD) -DARDUINO_ARCH_AVR $(INCLUDES)
+	-mmcu=$(BUILD_MCU) -DF_CPU=$(BUILD_F_CPU) -DARDUINO=156 -DARDUINO_$(BUILD_BOARD) -DARDUINO_ARCH_AVR $(INCLUDES)
 
 CXX = avr-g++
 CC = avr-gcc
@@ -26,10 +31,12 @@ AR = avr-ar
 OBJCOPY = avr-objcopy
 
 define do_link
-$(CC) -Os -Wl,--gc-sections -mmcu=$(MCU) -o $(OUTPUT_DIR)/$(EXE).elf $^
+$(CC) -Os -Wl,--gc-sections -mmcu=$(BUILD_MCU) -o $(OUTPUT_DIR)/$(EXE).elf $^
 avr-objcopy -O ihex -R .eeprom $(OUTPUT_DIR)/$(EXE).elf $(OUTPUT_DIR)/$(EXE).hex
 $(do_link_extra)
 avr-size $(OUTPUT_DIR)/$(EXE).elf
+@echo Max text: $(LOADER_MAX_SIZE)
+@echo Max data + bss: $(LOADER_MAX_DATA)
 endef
 
 define do_eeprom
@@ -39,15 +46,16 @@ avr-objcopy -O ihex -j .eeprom --set-section-flags=.eeprom=alloc,load \
 endef
 
 define do_load_avrdude
-@echo avrdude blah blah blah 
+avrdude -C"$(ARDUINO_HOME)/hardware/tools/avr/etc/avrdude.conf" -p$(BUILD_MCU) -c$(LOADER_PROTOCOL) \
+	-P$(SERIAL_PORT) -b$(LOADER_SPEED) -D "-Uflash:w:$(OUTPUT_DIR)/$(EXE).hex:i"
 endef
 
 endif # ARCH = avr
 
-INCLUDES = -I$(ARDUINO_HOME)/hardware/arduino/$(ARCH)/cores/$(CORE) \
-           -I$(ARDUINO_HOME)/hardware/arduino/$(ARCH)/variants/$(VARIANT)
+INCLUDES = -I$(ARDUINO_HOME)/hardware/arduino/$(ARCH)/cores/$(BUILD_CORE) \
+           -I$(ARDUINO_HOME)/hardware/arduino/$(ARCH)/variants/$(BUILD_VARIANT)
 
-LIB_ROOT = $(ARDUINO_HOME)/hardware/arduino/$(ARCH)/cores/$(CORE)
+LIB_ROOT = $(ARDUINO_HOME)/hardware/arduino/$(ARCH)/cores/$(BUILD_CORE)
 
 LIB_SRCS = $(call rwildcard, $(LIB_ROOT)/, *.c *.cpp)
 

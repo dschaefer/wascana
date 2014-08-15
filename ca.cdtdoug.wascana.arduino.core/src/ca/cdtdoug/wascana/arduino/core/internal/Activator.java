@@ -8,6 +8,7 @@ import ca.cdtdoug.wascana.arduino.core.target.ArduinoTargetRegistry;
 public class Activator extends Plugin {
 
 	private static Plugin plugin;
+	private static ArduinoTargetRegistry targetRegistry;
 
 	public static BundleContext getContext() {
 		return plugin.getBundle().getBundleContext();
@@ -16,14 +17,19 @@ public class Activator extends Plugin {
 	public static Plugin getPlugin() {
 		return plugin;
 	}
-	
+
 	public static String getId() {
 		return plugin.getBundle().getSymbolicName();
 	}
 
+	public static ArduinoTargetRegistry getTargetRegistry() {
+		return targetRegistry;
+	}
+
 	public void start(BundleContext bundleContext) throws Exception {
 		plugin = this;
-		getContext().registerService(ArduinoTargetRegistry.class, new ArduinoTargetRegistry(), null);
+		targetRegistry = new ArduinoTargetRegistry();
+		getContext().registerService(ArduinoTargetRegistry.class, targetRegistry, null);
 	}
 
 	public void stop(BundleContext bundleContext) throws Exception {

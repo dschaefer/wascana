@@ -1,16 +1,17 @@
 package ca.cdtdoug.wascana.arduino.core.launch;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import jssc.SerialPortException;
 
 import org.eclipse.cdt.core.CCorePlugin;
+import org.eclipse.cdt.core.envvar.IEnvironmentVariable;
 import org.eclipse.cdt.core.settings.model.ICConfigurationDescription;
 import org.eclipse.cdt.core.settings.model.ICProjectDescription;
-import org.eclipse.cdt.managedbuilder.core.BuildException;
 import org.eclipse.cdt.managedbuilder.core.IConfiguration;
-import org.eclipse.cdt.managedbuilder.core.IOption;
-import org.eclipse.cdt.managedbuilder.core.IToolChain;
 import org.eclipse.cdt.managedbuilder.core.ManagedBuildManager;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
@@ -25,28 +26,16 @@ import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.model.LaunchConfigurationDelegate;
-import org.osgi.util.tracker.ServiceTracker;
 
 import ca.cdtdoug.wascana.arduino.core.ArduinoProjectGenerator;
 import ca.cdtdoug.wascana.arduino.core.internal.Activator;
 import ca.cdtdoug.wascana.arduino.core.target.ArduinoTarget;
-import ca.cdtdoug.wascana.arduino.core.target.ArduinoTargetRegistry;
 
 public class ArduinoLaunchConfigurationDelegate extends LaunchConfigurationDelegate {
-
-	private final ServiceTracker<ArduinoTargetRegistry, ArduinoTargetRegistry> targetRegistryServiceTracker;
-	private final ArduinoTargetRegistry targetRegistry;
-
-	public ArduinoLaunchConfigurationDelegate() {
-		targetRegistryServiceTracker = new ServiceTracker<>(Activator.getContext(), ArduinoTargetRegistry.class, null);
-		targetRegistryServiceTracker.open();
-		targetRegistry = targetRegistryServiceTracker.getService();
-	}
 
 	@Override
 	protected void finalize() throws Throwable {
 		super.finalize();
-		targetRegistryServiceTracker.close();
 	}
 
 	@Override
@@ -58,8 +47,8 @@ public class ArduinoLaunchConfigurationDelegate extends LaunchConfigurationDeleg
 		ICConfigurationDescription configDesc = getBuildConfiguration(projDesc);
 		boolean newConfig = false;
 		if (configDesc == null) {
-			ArduinoTarget target = targetRegistry.getActiveTarget();
-			configDesc = ArduinoProjectGenerator.createBuildConfigurationForTarget(projDesc, target.getBoard());
+			ArduinoTarget target = Activator.getTargetRegistry().getActiveTarget();
+			configDesc = ArduinoProjectGenerator.createBuildConfiguration(projDesc, target.getBoard());
 			newConfig = true;
 		}
 		if (newConfig || !projDesc.getActiveConfiguration().equals(configDesc)) {
@@ -79,28 +68,38 @@ public class ArduinoLaunchConfigurationDelegate extends LaunchConfigurationDeleg
 	}
 
 	@Override
-	public void launch(ILaunchConfiguration configuration, String mode,
+	public void launch(final ILaunchConfiguration configuration, String mode,
 			final ILaunch launch, IProgressMonitor monitor) throws CoreException {
 		new Job("Arduino Launch") {
 			protected IStatus run(IProgressMonitor monitor) {
-				ArduinoTargetRegistry targetRegistry = targetRegistryServiceTracker.getService();
-				ArduinoTarget target = targetRegistry.getActiveTarget();
-
 				try {
+					ArduinoTarget target = Activator.getTargetRegistry().getActiveTarget();
 					ArduinoLaunchConsoleService consoleService = getConsoleService();
 
 					target.pauseSerialPort();
 
-					// The build configuration
-
-					// The build directory
+					// The project
+					IProject project = (IProject) configuration.getMappedResources()[0];
 
 					// The build environment
+					ICProjectDescription projDesc = CCorePlugin.getDefault().getProjectDescription(project);
+					ICConfigurationDescription configDesc = getBuildConfiguration(projDesc);
+					IEnvironmentVariable[] envVars = CCorePlugin.getDefault().getBuildEnvironmentManager().getVariables(configDesc, true);
+					List<String> envVarList = new ArrayList<String>(envVars.length);
+					for (IEnvironmentVariable var : envVars) {
+						envVarList.add(var.getName() + '=' + var.getValue());
+					}
+					String[] envp = envVarList.toArray(new String[envVarList.size()]);
 
+					// The project directory to launch from
+					File projectDir = new File(project.getLocationURI());
+					
 					// The build command
+					IConfiguration buildConfig = ManagedBuildManager.getConfigurationForDescription(configDesc);
+					String command = buildConfig.getBuilder().getCommand();
 
 					// Run the process and capture the results in the console
-					Process process = Runtime.getRuntime().exec("echo hi", null, null);
+					Process process = Runtime.getRuntime().exec(command + " load", envp, projectDir);
 					consoleService.monitor(process);
 
 					target.resumeSerialPort();
@@ -132,26 +131,13 @@ public class ArduinoLaunchConfigurationDelegate extends LaunchConfigurationDeleg
 	 * @return
 	 */
 	private ICConfigurationDescription getBuildConfiguration(ICProjectDescription projDesc) throws CoreException {
-		ArduinoTarget target = targetRegistry.getActiveTarget();
+		ArduinoTarget target = Activator.getTargetRegistry().getActiveTarget();
 		String boardId = target.getBoard().getId();
-
-		ICConfigurationDescription[] configDescs = projDesc.getConfigurations();
-		if (configDescs == null)
-			return null;
 
 		for (ICConfigurationDescription configDesc : projDesc.getConfigurations()) {
 			IConfiguration config = ManagedBuildManager.getConfigurationForDescription(configDesc);
-			IToolChain toolChain = config.getToolChain();
-			IOption option = toolChain.getOptionBySuperClassId("ca.cdtdoug.wascana.arduino.core.option.board");
-			try {
-				String boardType = option.getStringValue();
-				if (boardId.equals(boardType))
-					return configDesc;
-				if (boardType.isEmpty() && boardId.equals("uno")) // the default
-					return configDesc;
-			} catch (BuildException e) {
-				throw new CoreException(new Status(IStatus.ERROR, Activator.getId(), e.getLocalizedMessage(), e));
-			}
+			if (ArduinoProjectGenerator.getBoard(config).getId().equals(boardId))
+				return configDesc;
 		}
 
 		return null;

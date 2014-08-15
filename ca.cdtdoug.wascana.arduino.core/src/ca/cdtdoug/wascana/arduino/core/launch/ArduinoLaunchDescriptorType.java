@@ -13,6 +13,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.ILaunchConfiguration;
 
+import ca.cdtdoug.wascana.arduino.core.ArduinoProjectGenerator;
 import ca.cdtdoug.wascana.arduino.core.ArduinoProjectNature;
 import ca.cdtdoug.wascana.arduino.core.internal.Activator;
 
@@ -20,7 +21,6 @@ public class ArduinoLaunchDescriptorType implements ILaunchDescriptorType {
 
 	private ILaunchBarManager manager;
 	
-	public static final String avrToolChainId = "ca.cdtdoug.wascana.arduino.toolChain.avr";
 	public static final String arduinoLaunchConfigTypeId = "ca.cdtdoug.wascana.arduino.core.launchConfigurationType";
 
 	@Override
@@ -61,7 +61,7 @@ public class ArduinoLaunchDescriptorType implements ILaunchDescriptorType {
 		for (ICConfigurationDescription configDesc : projDesc.getConfigurations()) {
 			IConfiguration config = ManagedBuildManager.getConfigurationForDescription(configDesc);
 			IToolChain toolchain = config.getToolChain();
-			IToolChain avrToolchain = ManagedBuildManager.getExtensionToolChain(avrToolChainId);
+			IToolChain avrToolchain = ManagedBuildManager.getExtensionToolChain(ArduinoProjectGenerator.AVR_TOOLCHAIN_ID);
 			if (toolchain.matches(avrToolchain))
 				return true;
 		}
