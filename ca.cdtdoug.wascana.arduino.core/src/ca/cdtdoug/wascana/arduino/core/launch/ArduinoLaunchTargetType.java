@@ -58,10 +58,9 @@ public class ArduinoLaunchTargetType implements ILaunchTargetType, ArduinoTarget
 		ArduinoLaunchTarget launchTarget = new ArduinoLaunchTarget(this, target);
 		targetMap.put(launchTarget.getId(), launchTarget);
 		try {
-			manager.updateLaunchTarget(launchTarget);
+			manager.launchTargetAdded(launchTarget);
 		} catch (CoreException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Activator.getPlugin().getLog().log(e.getStatus());
 		}
 	}
 
@@ -70,10 +69,9 @@ public class ArduinoLaunchTargetType implements ILaunchTargetType, ArduinoTarget
 		ArduinoLaunchTarget launchTarget = targetMap.get(ArduinoLaunchTarget.getId(target));
 		targetMap.remove(launchTarget.getId());
 		try {
-			manager.updateLaunchTarget(launchTarget);
+			manager.launchTargetRemoved(launchTarget);
 		} catch (CoreException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Activator.getPlugin().getLog().log(e.getStatus());
 		}
 	}
 
