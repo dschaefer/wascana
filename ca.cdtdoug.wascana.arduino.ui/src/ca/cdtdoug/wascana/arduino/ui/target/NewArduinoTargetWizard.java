@@ -12,7 +12,6 @@ import ca.cdtdoug.wascana.arduino.ui.internal.Activator;
 
 public class NewArduinoTargetWizard extends Wizard implements INewWizard {
 
-	private ArduinoTargetRegistry targetRegistry = Activator.getDefault().getService(ArduinoTargetRegistry.class);
 	private NewArduinoTargetWizardPage page;
 	
 	@Override
@@ -21,21 +20,21 @@ public class NewArduinoTargetWizard extends Wizard implements INewWizard {
 
 	@Override
 	public void addPages() {
-		page = new NewArduinoTargetWizardPage(targetRegistry);
+		page = new NewArduinoTargetWizardPage();
 		addPage(page);
 	}
 	
 	@Override
 	public boolean performFinish() {
-		ArduinoTarget target;
 		try {
-			target = new ArduinoTarget(targetRegistry, page.name, page.portName, page.board);
+			ArduinoTargetRegistry targetRegistry = Activator.getTargetRegistry();
+			ArduinoTarget target = new ArduinoTarget(targetRegistry, page.name, page.portName, page.board);
+			targetRegistry.addTarget(target);
+			return true;
 		} catch (CoreException e) {
 			Activator.getDefault().getLog().log(e.getStatus());
 			return false;
 		}
-		targetRegistry.addTarget(target);
-		return true;
 	}
 
 }

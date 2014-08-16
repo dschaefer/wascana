@@ -15,12 +15,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
-import ca.cdtdoug.wascana.arduino.core.target.ArduinoTargetRegistry;
 import ca.cdtdoug.wascana.arduino.core.target.Board;
+import ca.cdtdoug.wascana.arduino.ui.internal.Activator;
 
 public class NewArduinoTargetWizardPage extends WizardPage {
-
-	private final ArduinoTargetRegistry targetRegistry;
 
 	String name;
 	private Text nameText;
@@ -33,11 +31,10 @@ public class NewArduinoTargetWizardPage extends WizardPage {
 	private Board[] boards;
 	private Combo boardCombo;
 
-	public NewArduinoTargetWizardPage(ArduinoTargetRegistry targetRegistry) {
+	public NewArduinoTargetWizardPage() {
 		super("NewArduinoTargetPage");
 		setDescription("New Arduino Target settings");
 		setTitle("New Arduino Target");
-		this.targetRegistry = targetRegistry;
 	}
 
 	@Override
@@ -85,7 +82,7 @@ public class NewArduinoTargetWizardPage extends WizardPage {
 
 		boardCombo = new Combo(comp, SWT.READ_ONLY);
 		boardCombo.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		boards = targetRegistry.getBoards();
+		boards = Activator.getTargetRegistry().getBoards();
 		for (Board board : boards) {
 			boardCombo.add(board.getName());
 		}

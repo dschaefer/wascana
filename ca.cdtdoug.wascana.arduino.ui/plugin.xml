@@ -65,4 +65,34 @@
             class="ca.cdtdoug.wascana.arduino.ui.launch.ArduinoLaunchConsole">
       </provider>
    </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            defaultHandler="ca.cdtdoug.wascana.arduino.ui.target.DeleteTargetHandler"
+            id="ca.cdtdoug.wascana.arduino.ui.command.deleteTarget"
+            name="Delete">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:org.eclipse.cdt.launchbar.ui.targetsView">
+         <command
+               commandId="ca.cdtdoug.wascana.arduino.ui.command.deleteTarget"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <with
+                     variable="activeMenuSelection">
+                  <iterate>
+                     <instanceof
+                           value="ca.cdtdoug.wascana.arduino.core.launch.ArduinoLaunchTarget">
+                     </instanceof>
+                  </iterate>
+               </with>
+            </visibleWhen>
+         </command>
+      </menuContribution>
+   </extension>
 </plugin>

@@ -134,4 +134,9 @@ public class ArduinoTarget {
 		}
 	}
 
+	public void delete() {
+		File targetFile = new File(targetRegistry.getTargetsDir(), name);
+		targetFile.delete();
+	}
+
 }

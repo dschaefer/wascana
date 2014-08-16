@@ -78,6 +78,7 @@ public class ArduinoTargetRegistry {
 	}
 
 	public void removeTarget(ArduinoTarget target) {
+		target.delete();
 		targets.remove(target.getName());
 		for (Listener listener : listeners) {
 			listener.targetRemoved(target);

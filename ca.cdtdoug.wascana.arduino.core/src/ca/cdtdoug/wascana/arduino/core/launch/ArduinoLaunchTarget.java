@@ -39,4 +39,8 @@ public class ArduinoLaunchTarget implements ILaunchTarget {
 		type.getTargetRegistry().setActiveTarget(target);
 	}
 
+	public ArduinoTarget getTarget() {
+		return target;
+	}
+
 }

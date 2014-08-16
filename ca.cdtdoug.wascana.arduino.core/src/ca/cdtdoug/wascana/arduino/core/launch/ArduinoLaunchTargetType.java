@@ -68,7 +68,7 @@ public class ArduinoLaunchTargetType implements ILaunchTargetType, ArduinoTarget
 	@Override
 	public void targetRemoved(ArduinoTarget target) {
 		ArduinoLaunchTarget launchTarget = targetMap.get(ArduinoLaunchTarget.getId(target));
-		targetMap.remove(launchTarget);
+		targetMap.remove(launchTarget.getId());
 		try {
 			manager.updateLaunchTarget(launchTarget);
 		} catch (CoreException e) {
