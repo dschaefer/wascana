@@ -17,14 +17,16 @@ import org.eclipse.ui.progress.UIJob;
 import ca.cdtdoug.wascana.arduino.core.launch.ArduinoLaunchConsoleService;
 
 public class ArduinoLaunchConsole implements ArduinoLaunchConsoleService {
-	
-	private MessageConsole console;
+
+	private static MessageConsole console;
 
 	public ArduinoLaunchConsole() {
-		console = new MessageConsole("Arduino Launch", null);
-		ConsolePlugin.getDefault().getConsoleManager().addConsoles(new IConsole[] { console });
+		if (console == null) {
+			console = new MessageConsole("Arduino Launch", null);
+			ConsolePlugin.getDefault().getConsoleManager().addConsoles(new IConsole[] { console });
+		}
 	}
-	
+
 	@Override
 	public void monitor(final Process process) {
 		console.clearConsole();

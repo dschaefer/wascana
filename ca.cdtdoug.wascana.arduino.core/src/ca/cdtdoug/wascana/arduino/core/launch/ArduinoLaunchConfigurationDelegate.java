@@ -101,6 +101,10 @@ public class ArduinoLaunchConfigurationDelegate extends LaunchConfigurationDeleg
 					// Run the process and capture the results in the console
 					Process process = Runtime.getRuntime().exec(command + " load", envp, projectDir);
 					consoleService.monitor(process);
+					try {
+						process.waitFor();
+					} catch (InterruptedException e) {
+					}
 
 					target.resumeSerialPort();
 				} catch (CoreException e) {

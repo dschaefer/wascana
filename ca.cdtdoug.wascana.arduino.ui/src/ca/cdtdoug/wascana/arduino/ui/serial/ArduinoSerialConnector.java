@@ -13,51 +13,40 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.tm.internal.terminal.provisional.api.ISettingsStore;
 import org.eclipse.tm.internal.terminal.provisional.api.ITerminalControl;
+import org.eclipse.tm.internal.terminal.provisional.api.TerminalState;
 import org.eclipse.tm.internal.terminal.provisional.api.provider.TerminalConnectorImpl;
 
 import ca.cdtdoug.wascana.arduino.core.target.ArduinoTarget;
+import ca.cdtdoug.wascana.arduino.core.target.ArduinoTarget.SerialPortController;
 import ca.cdtdoug.wascana.arduino.ui.internal.Activator;
 
 @SuppressWarnings("restriction")
-public class ArduinoSerialConnector extends TerminalConnectorImpl implements SerialPortEventListener {
+public class ArduinoSerialConnector extends TerminalConnectorImpl implements SerialPortEventListener, SerialPortController {
 
 	private SerialPort serialPort;
-	private String targetName;
-
+	private ArduinoTarget target;
+	private int baudrate = SerialPort.BAUDRATE_9600;
+	private int databits = SerialPort.DATABITS_8;
+	private int stopbits = SerialPort.STOPBITS_1;
+	private int parity = SerialPort.PARITY_NONE;
+	
 	@Override
 	public void connect(ITerminalControl control) {
 		super.connect(control);
-		ArduinoTarget target = Activator.getTargetRegistry().getTarget(targetName);
-		if (target == null)
-			// Badness
-			return;
+		resume();
+		control.setState(TerminalState.CONNECTED);
 
-		try {
-			serialPort = target.openSerialPort(
-					SerialPort.BAUDRATE_9600,
-					SerialPort.DATABITS_8,
-					SerialPort.STOPBITS_1,
-					SerialPort.PARITY_NONE,
-					this, SerialPort.MASK_RXCHAR);
-		} catch (SerialPortException e) {
-			Activator.getDefault().getLog().log(new Status(IStatus.ERROR, Activator.getId(), e.getLocalizedMessage(), e));
-			PrintStream out = new PrintStream(fControl.getRemoteToTerminalOutputStream());
-			out.println(e.getLocalizedMessage());
+		if (target != null) {
+			target.addSerialPortController(this);
 		}
 	}
 
 	@Override
 	protected void doDisconnect() {
-		try {
-			serialPort.closePort();
-		} catch (SerialPortException e) {
-			Activator.getDefault().getLog().log(new Status(IStatus.ERROR, Activator.getId(), e.getLocalizedMessage(), e));
+		pause();
+		if (target != null) {
+			target.removeSerialPortController(this);
 		}
-	}
-
-	@Override
-	protected void finalize() throws Throwable {
-		serialPort.closePort();
 	}
 
 	@Override
@@ -92,7 +81,8 @@ public class ArduinoSerialConnector extends TerminalConnectorImpl implements Ser
 
 	@Override
 	public void load(ISettingsStore store) {
-		targetName = store.get(ArduinoSerialMonitorDelegate.TARGET_NAME);
+		String targetName = store.get(ArduinoSerialMonitorDelegate.TARGET_NAME);
+		target = Activator.getTargetRegistry().getTarget(targetName);
 	}
 
 	@Override
@@ -107,6 +97,49 @@ public class ArduinoSerialConnector extends TerminalConnectorImpl implements Ser
 			} catch (IOException e) {
 				Activator.getDefault().getLog().log(new Status(IStatus.ERROR, Activator.getId(), e.getLocalizedMessage(), e));
 			}
+		}
+	}
+
+	@Override
+	public void pause() {
+		if (serialPort == null)
+			return;
+		
+		try {
+			if (serialPort.isOpened())
+				serialPort.closePort();
+			PrintStream out = new PrintStream(fControl.getRemoteToTerminalOutputStream());
+			out.print("\r\n--- Stopped ---\r\n");
+		} catch (SerialPortException e) {
+			Activator.getDefault().getLog().log(new Status(IStatus.ERROR, Activator.getId(), e.getLocalizedMessage(), e));
+			PrintStream out = new PrintStream(fControl.getRemoteToTerminalOutputStream());
+			out.println(e.getLocalizedMessage());
+		}
+	}
+
+	@Override
+	public void resume() {
+		try {
+			if (target == null) {
+				throw new IOException("No Target");
+			}
+			if (serialPort == null)
+				serialPort = new SerialPort(target.getPortName());
+			else {
+				PrintStream out = new PrintStream(fControl.getRemoteToTerminalOutputStream());
+				out.print("+++ Restart +++\r\n");
+			}
+			serialPort.openPort();
+			serialPort.setParams(baudrate, databits, stopbits, parity);
+			serialPort.addEventListener(this, SerialPort.MASK_RXCHAR);
+		} catch (IOException e) {
+			Activator.getDefault().getLog().log(new Status(IStatus.ERROR, Activator.getId(), e.getLocalizedMessage(), e));
+			PrintStream out = new PrintStream(fControl.getRemoteToTerminalOutputStream());
+			out.println(e.getLocalizedMessage());
+		} catch (SerialPortException e) {
+			Activator.getDefault().getLog().log(new Status(IStatus.ERROR, Activator.getId(), e.getLocalizedMessage(), e));
+			PrintStream out = new PrintStream(fControl.getRemoteToTerminalOutputStream());
+			out.println(e.getLocalizedMessage());
 		}
 	}
 

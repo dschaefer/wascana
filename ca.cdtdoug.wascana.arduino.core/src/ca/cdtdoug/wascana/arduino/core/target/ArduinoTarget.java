@@ -4,10 +4,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
-import jssc.SerialPort;
-import jssc.SerialPortEventListener;
 import jssc.SerialPortException;
 
 import org.eclipse.core.runtime.CoreException;
@@ -19,20 +19,17 @@ import ca.cdtdoug.wascana.arduino.core.internal.Activator;
 public class ArduinoTarget {
 
 	private String name;
-
 	private String portName;
-	private SerialPort serialPort;
-	private SerialPortEventListener listener;
-	private int mask;
-	private int baudRate;
-	private int dataBits;
-	private int stopBits;
-	private int parity;
-	boolean paused;
-
 	private Board board;
 
 	private final ArduinoTargetRegistry targetRegistry;
+	
+	public interface SerialPortController {
+		void pause();
+		void resume();
+	}
+	
+	private List<SerialPortController> controllers;
 
 	private static final String nameProp = "name";
 	private static final String portProp = "portName";
@@ -90,41 +87,31 @@ public class ArduinoTarget {
 		save();
 	}
 
-	public SerialPort openSerialPort(int baudRate, int dataBits, int stopBits, int parity,
-			SerialPortEventListener listener, int mask) throws SerialPortException {
-		this.listener = listener;
-		this.mask = mask;
-		this.baudRate = baudRate;
-		this.dataBits = dataBits;
-		this.stopBits = stopBits;
-		this.parity = parity;
-
-		serialPort = new SerialPort(portName);
-		serialPort.openPort();
-		serialPort.setParams(baudRate, dataBits, stopBits, parity);
-		serialPort.addEventListener(listener, mask);
-		return serialPort;
+	public void addSerialPortController(SerialPortController controller) {
+		if (controllers == null) {
+			controllers = new ArrayList<>();
+		}
+		controllers.add(controller);
 	}
 
+	public void removeSerialPortController(SerialPortController controller) {
+		controllers.remove(controller);
+	}
+	
 	public void pauseSerialPort() throws SerialPortException {
-		if (serialPort == null)
-			return;
-
-		if (!serialPort.isOpened())
-			return;
-
-		serialPort.closePort();
-
-		paused = true;
+		if (controllers != null) {
+			for (SerialPortController controller : controllers) {
+				controller.pause();
+			}
+		}
 	}
 
 	public void resumeSerialPort() throws SerialPortException {
-		if (!paused)
-			return;
-
-		serialPort.openPort();
-		serialPort.setParams(baudRate, dataBits, stopBits, parity);
-		serialPort.addEventListener(listener, mask);
+		if (controllers != null) {
+			for (SerialPortController controller : controllers) {
+				controller.resume();
+			}
+		}
 	}
 
 	private void save() throws CoreException {
