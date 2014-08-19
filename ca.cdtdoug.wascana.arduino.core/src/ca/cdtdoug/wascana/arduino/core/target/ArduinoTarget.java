@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.Properties;
 
 import jssc.SerialPort;
+import jssc.SerialPortEventListener;
 import jssc.SerialPortException;
 
 import org.eclipse.core.runtime.CoreException;
@@ -21,6 +22,8 @@ public class ArduinoTarget {
 
 	private String portName;
 	private SerialPort serialPort;
+	private SerialPortEventListener listener;
+	private int mask;
 	private int baudRate;
 	private int dataBits;
 	private int stopBits;
@@ -87,18 +90,20 @@ public class ArduinoTarget {
 		save();
 	}
 
-	public SerialPort getSerialPort() {
-		if (serialPort == null) {
-			serialPort = new SerialPort(portName);
-		}
-		return null;
-	}
-
-	public void setTerminalParams(int baudRate, int dataBits, int stopBits, int parity) {
+	public SerialPort openSerialPort(int baudRate, int dataBits, int stopBits, int parity,
+			SerialPortEventListener listener, int mask) throws SerialPortException {
+		this.listener = listener;
+		this.mask = mask;
 		this.baudRate = baudRate;
 		this.dataBits = dataBits;
 		this.stopBits = stopBits;
 		this.parity = parity;
+
+		serialPort = new SerialPort(portName);
+		serialPort.openPort();
+		serialPort.setParams(baudRate, dataBits, stopBits, parity);
+		serialPort.addEventListener(listener, mask);
+		return serialPort;
 	}
 
 	public void pauseSerialPort() throws SerialPortException {
@@ -109,6 +114,7 @@ public class ArduinoTarget {
 			return;
 
 		serialPort.closePort();
+
 		paused = true;
 	}
 
@@ -118,6 +124,7 @@ public class ArduinoTarget {
 
 		serialPort.openPort();
 		serialPort.setParams(baudRate, dataBits, stopBits, parity);
+		serialPort.addEventListener(listener, mask);
 	}
 
 	private void save() throws CoreException {

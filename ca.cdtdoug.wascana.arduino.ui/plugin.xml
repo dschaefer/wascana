@@ -5,7 +5,7 @@
          point="org.eclipse.tcf.te.ui.terminals.connectorTypes">
       <connectorType
             class="ca.cdtdoug.wascana.arduino.ui.serial.ArduinoSerialConnectorType"
-            id="ca.cdtdoug.wascana.arduino.serial.Connector"
+            id="ca.cdtdoug.wascana.arduino.serial.connector"
             label="Arduino Serial">
       </connectorType>
    </extension>
@@ -22,7 +22,7 @@
       <connector
             class="ca.cdtdoug.wascana.arduino.ui.serial.ArduinoSerialConnector"
             hidden="false"
-            id="ca.cdtdoug.wascana.arduino.connector"
+            id="ca.cdtdoug.wascana.arduino.serial.connector"
             name="Arduino Serial Monitor">
       </connector>
    </extension>
@@ -71,6 +71,15 @@
             defaultHandler="ca.cdtdoug.wascana.arduino.ui.target.DeleteTargetHandler"
             id="ca.cdtdoug.wascana.arduino.ui.command.deleteTarget"
             name="Delete">
+      </command>
+      <command
+            defaultHandler="ca.cdtdoug.wascana.arduino.ui.target.OpenTerminalHandler"
+            id="ca.cdtdoug.wascana.arduino.ui.command.openTerminal"
+            name="Open Terminal">
+      </command>
+      <command
+            id="ca.cdtdoug.wascana.arduino.ui.command2"
+            name="name">
       </command>
    </extension>
    <extension

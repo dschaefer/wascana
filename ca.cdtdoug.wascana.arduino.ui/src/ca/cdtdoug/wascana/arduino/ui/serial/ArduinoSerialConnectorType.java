@@ -8,9 +8,12 @@ import org.eclipse.tm.internal.terminal.provisional.api.TerminalConnectorExtensi
 @SuppressWarnings("restriction")
 public class ArduinoSerialConnectorType extends AbstractConnectorType {
 
+	public static final String ID = "ca.cdtdoug.wascana.arduino.serial.connector";
+
 	@Override
 	public ITerminalConnector createTerminalConnector(IPropertiesContainer properties) {
-		ITerminalConnector connector = TerminalConnectorExtension.makeTerminalConnector("ca.cdtdoug.wascana.arduino.connector");
+		ITerminalConnector connector = TerminalConnectorExtension.makeTerminalConnector(ID);
+		connector.load(new ArduinoSerialSettingsStore(properties));
 		return connector;
 	}
 

@@ -77,6 +77,10 @@ public class ArduinoTargetRegistry {
 		}
 	}
 
+	public ArduinoTarget getTarget(String name) {
+		return targets.get(name);
+	}
+
 	public void removeTarget(ArduinoTarget target) {
 		target.delete();
 		targets.remove(target.getName());
