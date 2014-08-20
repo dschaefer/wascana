@@ -33,4 +33,9 @@ public class ArduinoLaunchDescriptor implements ILaunchDescriptor {
 		return project;
 	}
 
+	@Override
+	public boolean isOpen() {
+		return true;
+	}
+
 }

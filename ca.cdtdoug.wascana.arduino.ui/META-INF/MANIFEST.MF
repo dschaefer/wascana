@@ -18,6 +18,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.console,
  org.eclipse.ui.ide,
  org.eclipse.tcf.te.ui,
- org.eclipse.tcf.te.runtime.services
+ org.eclipse.tcf.te.runtime.services,
+ org.eclipse.cdt.launchbar.core
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy

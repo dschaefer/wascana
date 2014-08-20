@@ -77,10 +77,6 @@
             id="ca.cdtdoug.wascana.arduino.ui.command.openTerminal"
             name="Open Terminal">
       </command>
-      <command
-            id="ca.cdtdoug.wascana.arduino.ui.command2"
-            name="name">
-      </command>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
@@ -103,5 +99,19 @@
             </visibleWhen>
          </command>
       </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.propertyPages">
+      <page
+            class="ca.cdtdoug.wascana.arduino.ui.target.ArduinoTargetPropertyPage"
+            id="ca.cdtdoug.wascana.arduino.ui.targetPropertyPage"
+            name="Arduino"
+            selectionFilter="single">
+         <enabledWhen>
+            <instanceof
+                  value="ca.cdtdoug.wascana.arduino.core.launch.ArduinoLaunchTarget">
+            </instanceof>
+         </enabledWhen>
+      </page>
    </extension>
 </plugin>
