@@ -1,4 +1,4 @@
-# Wascana C/C++ Tools
+# Wascana C/C++ Tools for Eclipse
 
 Wascana is a collection of Eclipse CDT extensions and toolchains for common open platforms.
 Immediate plans are to support the Minimalist GNU for Windows (MinGW), Arduino, and Raspberry Pi.
