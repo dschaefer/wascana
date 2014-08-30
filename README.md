@@ -7,3 +7,6 @@ Other platforms may be added in the future as the community shows interest.
 The common them is to provide a one stop shop and a single point of install that includes both
 the CDT extensions, but also the toolchains as well, everything needed to build applications
 for those platforms.
+
+Wascana supports the three major platforms as hosts: Windows, Mac, and Linux.
+To simplify the build environment, MSYS is used as a shell environment for make on Windows.
