@@ -101,15 +101,19 @@ public class ArduinoSerialMonitorPanel extends AbstractConfigurationPanel implem
 		// nothing
 	}
 
-	@Override
-	public void extractData(IPropertiesContainer data) {
-		ArduinoTarget target = targets[targetSelector.getSelectionIndex()];
+	public static void extractData(IPropertiesContainer data, ArduinoTarget target) {
 		data.setProperty(ArduinoSerialMonitorDelegate.TARGET_NAME, target.getName());
 
 		data.setProperty(ITerminalsConnectorConstants.PROP_TERMINAL_CONNECTOR_ID, ArduinoSerialConnectorType.ID);
 		data.setProperty(ITerminalsConnectorConstants.PROP_CONNECTOR_TYPE_ID, ArduinoSerialConnectorType.ID);
 		data.setProperty(ITerminalsConnectorConstants.PROP_HAS_DISCONNECT_BUTTON, true);
 		data.setProperty(ITerminalsConnectorConstants.PROP_TITLE, target.getName());
+	}
+
+	@Override
+	public void extractData(IPropertiesContainer data) {
+		ArduinoTarget target = targets[targetSelector.getSelectionIndex()];
+		extractData(data, target);
 	}
 
 }

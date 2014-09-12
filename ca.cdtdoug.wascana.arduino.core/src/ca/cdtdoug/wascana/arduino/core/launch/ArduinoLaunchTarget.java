@@ -2,10 +2,11 @@ package ca.cdtdoug.wascana.arduino.core.launch;
 
 import org.eclipse.cdt.launchbar.core.ILaunchTarget;
 import org.eclipse.cdt.launchbar.core.ILaunchTargetType;
+import org.eclipse.core.runtime.PlatformObject;
 
 import ca.cdtdoug.wascana.arduino.core.target.ArduinoTarget;
 
-public class ArduinoLaunchTarget implements ILaunchTarget {
+public class ArduinoLaunchTarget extends PlatformObject implements ILaunchTarget {
 
 	private final ArduinoLaunchTargetType type;
 	private final ArduinoTarget target;
@@ -15,11 +16,15 @@ public class ArduinoLaunchTarget implements ILaunchTarget {
 		this.target = target;
 	}
 
+	@SuppressWarnings("rawtypes")
 	@Override
-	public String getId() {
-		return getId(target);
+	public Object getAdapter(Class adapter) {
+		if (ArduinoTarget.class.equals(adapter)) {
+			return target;
+		}
+		return super.getAdapter(adapter);
 	}
-
+	
 	public static String getId(ArduinoTarget target) {
 		return target.getName();
 	}
@@ -35,12 +40,10 @@ public class ArduinoLaunchTarget implements ILaunchTarget {
 	}
 
 	@Override
-	public void setActive() {
-		type.getTargetRegistry().setActiveTarget(target);
-	}
-
-	public ArduinoTarget getTarget() {
-		return target;
+	public void setActive(boolean active) {
+		if (active) {
+			type.getTargetRegistry().setActiveTarget(target);
+		}
 	}
 
 }

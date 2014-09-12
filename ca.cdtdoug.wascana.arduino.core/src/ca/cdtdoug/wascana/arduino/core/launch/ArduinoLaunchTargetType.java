@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.cdt.launchbar.core.ILaunchBarManager;
-import org.eclipse.cdt.launchbar.core.ILaunchTarget;
 import org.eclipse.cdt.launchbar.core.ILaunchTargetType;
 import org.eclipse.core.runtime.CoreException;
 import org.osgi.framework.ServiceReference;
@@ -17,47 +16,37 @@ public class ArduinoLaunchTargetType implements ILaunchTargetType, ArduinoTarget
 
 	private ILaunchBarManager manager;
 	private ArduinoTargetRegistry targetRegistry;
-	private Map<String, ArduinoLaunchTarget> targetMap = new HashMap<>();
-	
+	private Map<ArduinoTarget, ArduinoLaunchTarget> targetMap = new HashMap<>();
+
 	@Override
 	public void init(ILaunchBarManager manager) {
 		this.manager = manager;
-		
+
 		ServiceReference<ArduinoTargetRegistry> ref = Activator.getContext().getServiceReference(ArduinoTargetRegistry.class);
 		targetRegistry = Activator.getContext().getService(ref);
 
-		targetRegistry.addListener(this);
 		ArduinoTarget[] targets = targetRegistry.getTargets();
 		for (ArduinoTarget target : targets) {
-			ArduinoLaunchTarget launchTarget = new ArduinoLaunchTarget(this, target);
-			targetMap.put(launchTarget.getId(), launchTarget);
+			targetAdded(target);
 		}
+
+		targetRegistry.addListener(this);
+	}
+
+	@Override
+	public void dispose() {
+		targetRegistry.removeListener(this);
 	}
 
 	ArduinoTargetRegistry getTargetRegistry() {
 		return targetRegistry;
 	}
-	
-	@Override
-	public String getId() {
-		return "ca.cdtdoug.wascana.arduino.core.targetType";
-	}
-
-	@Override
-	public ILaunchTarget[] getTargets() {
-		return targetMap.values().toArray(new ILaunchTarget[targetMap.size()]);
-	}
-
-	@Override
-	public ILaunchTarget getTarget(String id) {
-		return targetMap.get(id);
-	}
 
 	@Override
 	public void targetAdded(ArduinoTarget target) {
-		ArduinoLaunchTarget launchTarget = new ArduinoLaunchTarget(this, target);
-		targetMap.put(launchTarget.getId(), launchTarget);
 		try {
+			ArduinoLaunchTarget launchTarget = new ArduinoLaunchTarget(this, target);
+			targetMap.put(target, launchTarget);
 			manager.launchTargetAdded(launchTarget);
 		} catch (CoreException e) {
 			Activator.getPlugin().getLog().log(e.getStatus());
@@ -66,9 +55,9 @@ public class ArduinoLaunchTargetType implements ILaunchTargetType, ArduinoTarget
 
 	@Override
 	public void targetRemoved(ArduinoTarget target) {
-		ArduinoLaunchTarget launchTarget = targetMap.get(ArduinoLaunchTarget.getId(target));
-		targetMap.remove(launchTarget.getId());
 		try {
+			ArduinoLaunchTarget launchTarget = targetMap.get(target);
+			targetMap.remove(target);
 			manager.launchTargetRemoved(launchTarget);
 		} catch (CoreException e) {
 			Activator.getPlugin().getLog().log(e.getStatus());

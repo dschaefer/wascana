@@ -87,9 +87,14 @@
       </descriptorType>
       <configProvider
             class="ca.cdtdoug.wascana.arduino.core.launch.ArduinoLaunchConfigurationProvider"
-            descriptorType="ca.cdtdoug.wascana.arduino.core.descriptorType"
-            targetType="ca.cdtdoug.wascana.arduino.core.targetType">
+            launchConfigurationType="ca.cdtdoug.wascana.arduino.core.launchConfigurationType">
       </configProvider>
+      <configType
+            descriptorType="ca.cdtdoug.wascana.arduino.core.descriptorType"
+            isDefault="true"
+            launchConfigurationType="ca.cdtdoug.wascana.arduino.core.launchConfigurationType"
+            targetType="ca.cdtdoug.wascana.arduino.core.targetType">
+      </configType>
    </extension>
    <extension
          point="org.eclipse.debug.core.launchConfigurationTypes">

@@ -52,9 +52,6 @@ endef
 
 endif # ARCH = avr
 
-INCLUDES = -I$(ARDUINO_HOME)/hardware/arduino/$(ARCH)/cores/$(BUILD_CORE) \
-           -I$(ARDUINO_HOME)/hardware/arduino/$(ARCH)/variants/$(BUILD_VARIANT)
-
 LIB_ROOT = $(ARDUINO_HOME)/hardware/arduino/$(ARCH)/cores/$(BUILD_CORE)
 
 LIB_SRCS = $(call rwildcard, $(LIB_ROOT)/, *.c *.cpp)
@@ -62,7 +59,15 @@ LIB_SRCS = $(call rwildcard, $(LIB_ROOT)/, *.c *.cpp)
 LIB_OBJS = $(patsubst $(LIB_ROOT)/%.c, $(OUTPUT_DIR)/arduino/%.o, $(filter %.c, $(LIB_SRCS))) \
            $(patsubst $(LIB_ROOT)/%.cpp, $(OUTPUT_DIR)/arduino/%.o, $(filter %.cpp, $(LIB_SRCS)))
 
-SRCS = $(call rwildcard, ./, *.c *.cpp)
+LIBS_ROOTS = $(HOME)/Documents/Arduino/libraries $(ARDUINO_HOME)/hardware/arduino/$(ARCH)/libraries $(ARDUINO_HOME)/libraries
+
+LIBS_DIRS = $(foreach lib, $(LIBS), $(firstword $(realpath $(foreach lib_root, $(LIBS_ROOTS), $(lib_root)/$(lib)))))
+
+INCLUDES = -I$(ARDUINO_HOME)/hardware/arduino/$(ARCH)/cores/$(BUILD_CORE) \
+           -I$(ARDUINO_HOME)/hardware/arduino/$(ARCH)/variants/$(BUILD_VARIANT) \
+           $(foreach lib, $(LIBS_DIRS), -I$(lib))
+
+SRCS = $(call rwildcard, ./, *.c *.cpp) $(foreach lib, $(LIBS_DIRS), $(wildcard $(lib)/*.c $(lib)/*.cpp $(lib)/utility/*.c $(lib)/utility/*.cpp))
 
 OBJS = $(patsubst %.cpp, $(OUTPUT_DIR)/%.o, $(filter %.cpp, $(SRCS))) \
        $(patsubst %.c, $(OUTPUT_DIR)/%.o, $(filter %.c, $(SRCS)))

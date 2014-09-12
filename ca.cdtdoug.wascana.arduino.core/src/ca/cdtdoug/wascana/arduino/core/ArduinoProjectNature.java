@@ -28,7 +28,7 @@ public class ArduinoProjectNature implements IProjectNature {
 			if (id.equals(ID))
 				return true;
 		}
-		return true;
+		return false;
 	}
 
 	@Override

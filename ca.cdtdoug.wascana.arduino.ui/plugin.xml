@@ -75,7 +75,7 @@
       <command
             defaultHandler="ca.cdtdoug.wascana.arduino.ui.target.OpenTerminalHandler"
             id="ca.cdtdoug.wascana.arduino.ui.command.openTerminal"
-            name="Open Terminal">
+            name="Open Serial Monitor">
       </command>
    </extension>
    <extension
@@ -91,9 +91,24 @@
                <with
                      variable="activeMenuSelection">
                   <iterate>
-                     <instanceof
-                           value="ca.cdtdoug.wascana.arduino.core.launch.ArduinoLaunchTarget">
-                     </instanceof>
+                     <adapt
+                           type="ca.cdtdoug.wascana.arduino.core.target.ArduinoTarget">
+                     </adapt>
+                  </iterate>
+               </with>
+            </visibleWhen>
+         </command>
+         <command
+               commandId="ca.cdtdoug.wascana.arduino.ui.command.openTerminal"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <with
+                     variable="activeMenuSelection">
+                  <iterate>
+                     <adapt
+                           type="ca.cdtdoug.wascana.arduino.core.target.ArduinoTarget">
+                     </adapt>
                   </iterate>
                </with>
             </visibleWhen>
@@ -108,9 +123,9 @@
             name="Arduino"
             selectionFilter="single">
          <enabledWhen>
-            <instanceof
-                  value="ca.cdtdoug.wascana.arduino.core.launch.ArduinoLaunchTarget">
-            </instanceof>
+            <adapt
+                  type="ca.cdtdoug.wascana.arduino.core.target.ArduinoTarget">
+            </adapt>
          </enabledWhen>
       </page>
    </extension>

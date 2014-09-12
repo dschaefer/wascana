@@ -2,7 +2,6 @@ package ca.cdtdoug.wascana.arduino.ui.target;
 
 import jssc.SerialPortList;
 
-import org.eclipse.cdt.launchbar.core.ILaunchTarget;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -14,7 +13,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbenchPropertyPage;
 import org.eclipse.ui.dialogs.PropertyPage;
 
-import ca.cdtdoug.wascana.arduino.core.launch.ArduinoLaunchTarget;
+import ca.cdtdoug.wascana.arduino.core.target.ArduinoTarget;
 import ca.cdtdoug.wascana.arduino.core.target.Board;
 import ca.cdtdoug.wascana.arduino.ui.internal.Activator;
 
@@ -31,7 +30,7 @@ public class ArduinoTargetPropertyPage extends PropertyPage implements IWorkbenc
 		Composite comp = new Composite(parent, SWT.NONE);
 		comp.setLayout(new GridLayout(2, false));
 
-		ArduinoLaunchTarget target = (ArduinoLaunchTarget) getElement().getAdapter(ILaunchTarget.class);
+		ArduinoTarget target = (ArduinoTarget) getElement().getAdapter(ArduinoTarget.class);
 
 		Label portLabel = new Label(comp, SWT.NONE);
 		portLabel.setText("Serial Port:");
@@ -39,7 +38,7 @@ public class ArduinoTargetPropertyPage extends PropertyPage implements IWorkbenc
 		portSelector = new Combo(comp, SWT.READ_ONLY);
 		portSelector.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
-		String currentPort = target.getTarget().getPortName();
+		String currentPort = target.getPortName();
 		int i = 0, portSel = 0;
 		ports = SerialPortList.getPortNames();
 		for (String port : ports) {
@@ -62,7 +61,7 @@ public class ArduinoTargetPropertyPage extends PropertyPage implements IWorkbenc
 		boardSelector = new Combo(comp, SWT.READ_ONLY);
 		boardSelector.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
-		Board currentBoard = target.getTarget().getBoard();
+		Board currentBoard = target.getBoard();
 		i = 0;
 		int boardSel = 0;
 		boards = Activator.getTargetRegistry().getBoards();
@@ -80,12 +79,12 @@ public class ArduinoTargetPropertyPage extends PropertyPage implements IWorkbenc
 
 	@Override
 	public boolean performOk() {
-		ArduinoLaunchTarget target = (ArduinoLaunchTarget) getElement().getAdapter(ILaunchTarget.class);
+		ArduinoTarget target = (ArduinoTarget) getElement().getAdapter(ArduinoTarget.class);
 
 		int i = portSelector.getSelectionIndex();
 		if (i >= 0) {
 			try {
-				target.getTarget().setPortName(ports[i]);
+				target.setPortName(ports[i]);
 			} catch (CoreException e) {
 				Activator.getDefault().getLog().log(e.getStatus());
 				return false;
@@ -94,7 +93,7 @@ public class ArduinoTargetPropertyPage extends PropertyPage implements IWorkbenc
 
 		i = boardSelector.getSelectionIndex();
 		try {
-			target.getTarget().setBoard(boards[i]);
+			target.setBoard(boards[i]);
 		} catch (CoreException e) {
 			Activator.getDefault().getLog().log(e.getStatus());
 			return false;
