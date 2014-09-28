@@ -1,8 +1,9 @@
 package ca.cdtdoug.wascana.arduino.ui.internal;
 
+import org.eclipse.jface.resource.ImageRegistry;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.ServiceReference;
 import org.osgi.util.tracker.ServiceTracker;
 
 import ca.cdtdoug.wascana.arduino.core.target.ArduinoTargetRegistry;
@@ -15,6 +16,8 @@ public class Activator extends AbstractUIPlugin {
 	// The plug-in ID
 	public static final String PLUGIN_ID = "ca.cdtdoug.wascana.arduino.ui"; //$NON-NLS-1$
 
+	public static final String IMG_ARDUINO = "arduino";
+	
 	// The shared instance
 	private static Activator plugin;
 	
@@ -27,13 +30,15 @@ public class Activator extends AbstractUIPlugin {
 		targetRegistryServiceTracker = new ServiceTracker<>(context, ArduinoTargetRegistry.class, null);
 		targetRegistryServiceTracker.open();
 		targetRegistry = targetRegistryServiceTracker.getService();
+
+		ImageRegistry imageRegistry = getImageRegistry();
+		imageRegistry.put(IMG_ARDUINO, imageDescriptorFromPlugin(PLUGIN_ID, "icons/logo.png"));
 	}
 
 	public void stop(BundleContext context) throws Exception {
 		targetRegistryServiceTracker.close();
 		plugin = null;
 		super.stop(context);
-		
 	}
 
 	/**
@@ -55,6 +60,10 @@ public class Activator extends AbstractUIPlugin {
 
 	public static ArduinoTargetRegistry getTargetRegistry() {
 		return targetRegistry;
+	}
+
+	public Image getImage(String id) {
+		return getImageRegistry().get(id);
 	}
 
 }
