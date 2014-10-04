@@ -41,7 +41,6 @@ public class NewArduinoTargetWizardPage extends WizardPage {
 	public void createControl(Composite parent) {
 		Composite comp = new Composite(parent, SWT.NONE);
 		comp.setLayout(new GridLayout(2, false));
-		setControl(comp);
 
 		Label nameLabel = new Label(comp, SWT.NONE);
 		nameLabel.setText("Target name:");
@@ -94,6 +93,7 @@ public class NewArduinoTargetWizardPage extends WizardPage {
 			}
 		});
 
+		setControl(comp);
 		setPageComplete(false);
 	}
 
