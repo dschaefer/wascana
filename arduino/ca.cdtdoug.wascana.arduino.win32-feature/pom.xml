@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.eclipse.cdt</groupId>
+		<artifactId>cdt-parent</artifactId>
+		<version>8.5.0-SNAPSHOT</version>
+		<relativePath>../../pom.xml</relativePath>
+	</parent>
+
+	<groupId>org.eclipse.cdt.features</groupId>
+	<artifactId>org.eclipse.cdt</artifactId>
+	<packaging>eclipse-feature</packaging>
+
+	<build>
+		<plugins>	
+			<plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.6</version>
+				<executions>
+					<execution>
+						<id>build-root-files</id>
+						<phase>generate-resources</phase>
+						<configuration>
+							<target>
+								<property name="jreVersion" value="8u5"/>
+								<property name="jreArchive" value="jre-${jreVersion}-windows-x64.tar.gz"/>
+								<property name="jreDirName" value="jre1.8.0_05"/>
+								<property name="jreHTTPPath" value="${svnDepURL}/jre/${jreVersion}/"/>
+
+								<get src="${jreHTTPPath}/${jreArchive}" dest="."/>
+								<untar src="${jreArchive}" dest="." compression="gzip"/>
+								<delete dir="jre" failonerror="false"/>
+								<move file="${jreDirName}" tofile="jre" verbose="true"/>
+							</target>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>
