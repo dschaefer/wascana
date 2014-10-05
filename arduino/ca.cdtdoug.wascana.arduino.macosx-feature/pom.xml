@@ -27,7 +27,10 @@
                 <property name="arduino-zip" value="arduino-${project.version}-macosx-java7.zip"/>
                 <delete dir="rootfiles" failonerror="false"/>
                 <get src="http://downloads.arduino.cc/${arduino-zip}" dest="." skipexisting="true"/>
-                <unzip src="${arduino-zip}" dest="."/>
+                <exec executable="unzip">
+                  <arg value="-q"/>
+                  <arg value="${arduino-zip}"/>
+                </exec>
                 <move file="Arduino.app/Contents/Java" tofile="rootfiles/arduino"/>
                 <delete dir="Arduino.app"/>
                 <delete includeemptydirs="true">
