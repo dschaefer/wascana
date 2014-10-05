@@ -1,5 +1,5 @@
 */target/
-*/bin/
+*/@LongLink
+*/*.tgz
 */*.zip
-*/*.tar.gz
-*/rootfiles*
+*/rootfiles/

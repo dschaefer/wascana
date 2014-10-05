@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="ca.cdtdoug.wascana.arduino.win32"
-      label="Arduino Toolchain for Windows"
+      id="ca.cdtdoug.wascana.arduino.linux.x86_64"
+      label="X86_64-feature"
       version="1.5.8"
-      os="win32">
+      os="linux"
+      arch="x86_64">
 
    <description url="http://www.example.com/description">
       [Enter Feature Description here.]

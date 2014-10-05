@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="ca.cdtdoug.wascana.arduino.win32"
-      label="Arduino Toolchain for Windows"
+      id="ca.cdtdoug.wascana.arduino.macosx"
+      label="Macosx-feature"
       version="1.5.8"
-      os="win32">
+      os="macosx">
 
    <description url="http://www.example.com/description">
       [Enter Feature Description here.]

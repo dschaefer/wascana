@@ -116,15 +116,6 @@
       </content-type>
    </extension>
    <extension
-         id="hexBinaryParser"
-         point="org.eclipse.cdt.core.BinaryParser">
-      <cextension>
-         <run
-               class="ca.cdtdoug.wascana.arduino.core.ArduinoHexBinaryParser">
-         </run>
-      </cextension>
-   </extension>
-   <extension
          id="arduinoNature"
          point="org.eclipse.core.resources.natures">
       <runtime>

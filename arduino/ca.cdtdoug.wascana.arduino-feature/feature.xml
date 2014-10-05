@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="ca.cdtdoug.wascana.arduino"
-      label="Arduino C++ IDE"
+      label="Arduino C++ Tooling"
       version="1.0.0.qualifier"
       provider-name="Doug Schaefer">
 
@@ -16,6 +16,28 @@
    <license url="http://www.example.com/license">
       [Enter License Description here.]
    </license>
+
+   <includes
+         id="ca.cdtdoug.wascana.arduino.win32"
+         version="0.0.0"
+         os="win32"/>
+
+   <includes
+         id="ca.cdtdoug.wascana.arduino.linux.x86"
+         version="0.0.0"
+         os="linux"
+         arch="x86"/>
+
+   <includes
+         id="ca.cdtdoug.wascana.arduino.linux.x86_64"
+         version="0.0.0"
+         os="linux"
+         arch="x86_64"/>
+
+   <includes
+         id="ca.cdtdoug.wascana.arduino.macosx"
+         version="0.0.0"
+         os="macosx"/>
 
    <requires>
       <import feature="org.eclipse.cdt"/>
