@@ -5,6 +5,16 @@ OUTPUT_DIR ?= build/Default
 
 rwildcard = $(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2) $(filter $(subst *,%,$2),$d))
 
+ifeq ($(OS),Windows_NT)
+RMDIR = rmdir /s /q
+fixpath = $(subst /,\,$1)
+mymkdir = if not exist "$(call fixpath,$1)" mkdir $(call fixpath,$1)
+else
+RMDIR = rm -fr
+fixpath = $1
+mymkdir = mkdir -p $1
+endif
+
 ifeq ($(BOARD),uno)
 ARCH = avr
 BUILD_CORE = arduino
@@ -75,7 +85,7 @@ OBJS = $(patsubst %.cpp, $(OUTPUT_DIR)/%.o, $(filter %.cpp, $(SRCS))) \
 all:	$(OUTPUT_DIR)/$(EXE).hex
 
 clean:
-	rm -fr $(OUTPUT_DIR)
+	$(RMDIR) $(call fixpath,$(OUTPUT_DIR))
 
 load:	#$(OUTPUT_DIR)/$(EXE).hex
 	$(do_load_$(LOADER))
@@ -87,17 +97,17 @@ $(OUTPUT_DIR)/core.a: $(LIB_OBJS)
 	$(AR) r $@ $?
 
 $(OUTPUT_DIR)/arduino/%.o: $(LIB_ROOT)/%.c
-	@mkdir -p $(dir $@)
+	@-$(call mymkdir,$(dir $@))
 	$(CC) -c $(CFLAGS) $(CPPFLAGS) -o $@ $< 
 
 $(OUTPUT_DIR)/arduino/%.o: $(LIB_ROOT)/%.cpp
-	@mkdir -p $(dir $@)
+	@-$(call mymkdir,$(dir $@))
 	$(CXX) -c $(CXXFLAGS) $(CPPFLAGS) -o $@ $< 
 
 $(OUTPUT_DIR)/%.o: %.c
-	@mkdir -p $(dir $@)
+	@-$(call mymkdir,$(dir $@))
 	$(CC) -c $(CFLAGS) $(CPPFLAGS) -o $@ $< 
 
 $(OUTPUT_DIR)/%.o: %.cpp
-	@mkdir -p $(dir $@)
+	@-$(call mymkdir,$(dir $@))
 	$(CXX) -c $(CXXFLAGS) $(CPPFLAGS) -o $@ $< 

@@ -32,6 +32,7 @@
                 <get src="http://arduino.cc/download.php?f=/${arduino-zip}" dest="${arduino-zip}" skipexisting="true"/>
                 <unzip src="${arduino-zip}" dest="."/>
                 <move file="arduino-${project.version}" tofile="rootfiles/arduino"/>
+                <get src="ftp://ftp.equation.com/make/32/make.exe" dest="rootfiles/arduino"/>
                 <delete includeemptydirs="true">
                   <fileset file="rootfiles/arduino/arduino.exe"/>
                   <fileset file="rootfiles/arduino/arduino_debug.exe"/>
