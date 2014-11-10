@@ -26,11 +26,9 @@
               <target>
                 <property name="arduino-zip" value="arduino-${project.version}-macosx-java7.zip"/>
                 <delete dir="rootfiles" failonerror="false"/>
-                <get src="http://downloads.arduino.cc/${arduino-zip}" dest="." skipexisting="true"/>
-                <exec executable="unzip">
-                  <arg value="-q"/>
-                  <arg value="${arduino-zip}"/>
-                </exec>
+                <get src="http://arduino.cc/download.php?f=/${arduino-zip}" dest="${arduino-zip}" skipexisting="true"/>
+                <unzip src="${arduino-zip}" dest="."/>
+                <!-- TODO: chmod the executables -->
                 <move file="Arduino.app/Contents/Java" tofile="rootfiles/arduino"/>
                 <delete dir="Arduino.app"/>
                 <delete includeemptydirs="true">

@@ -29,7 +29,7 @@
               <target>
                 <property name="arduino-zip" value="arduino-${project.version}-windows.zip"/>
                 <delete dir="rootfiles/arduino" failonerror="false"/>
-                <get src="http://downloads.arduino.cc/${arduino-zip}" dest="." skipexisting="true"/>
+                <get src="http://arduino.cc/download.php?f=/${arduino-zip}" dest="${arduino-zip}" skipexisting="true"/>
                 <unzip src="${arduino-zip}" dest="."/>
                 <move file="arduino-${project.version}" tofile="rootfiles/arduino"/>
                 <delete includeemptydirs="true">
