@@ -132,7 +132,7 @@
    <extension
          point="org.eclipse.cdt.launchbar.ui.launchBarUIContributions">
       <targetUI
-            icon="icons/logo.png"
+            icon="platform:/plugin/ca.cdtdoug.wascana.arduino.ui/icons/logo.png"
             labelProvider="ca.cdtdoug.wascana.arduino.ui.target.ArduinoTargetLabelProvider"
             name="Arduino"
             newWizard="ca.cdtdoug.wascana.arduino.ui.target.NewArduinoTargetWizard"
