@@ -61,7 +61,8 @@
             class="ca.cdtdoug.wascana.arduino.core.AvrLanguageSettingsProvider"
             id="ca.cdtdoug.wascana.arduino.avr.builtins"
             name="Arduino AVR Compiler Built-ins"
-            parameter="${COMMAND} ${FLAGS} -E -P -v -dD &quot;${INPUTS}&quot;">
+            parameter="${COMMAND} ${FLAGS} -E -P -v -dD &quot;${INPUTS}&quot;"
+            prefer-non-shared="true">
          <language-scope
                id="org.eclipse.cdt.core.g++">
          </language-scope>

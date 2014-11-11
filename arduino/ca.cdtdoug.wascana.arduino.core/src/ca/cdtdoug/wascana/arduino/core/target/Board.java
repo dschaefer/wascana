@@ -24,4 +24,8 @@ public class Board {
 		return getProperty("name");
 	}
 
+	public String getMCU() {
+		return getProperty("build.mcu");
+	}
+
 }
