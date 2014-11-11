@@ -23,6 +23,7 @@ public class EnvVarSupplier implements IConfigurationEnvironmentVariableSupplier
 	private static final String OUTPUT_DIR = "OUTPUT_DIR";
 	private static final String BOARD = "BOARD";
 	private static final String SERIAL_PORT = "SERIAL_PORT";
+	private static final String CYGWIN = "CYGWIN";
 
 	private static final class EnvVar implements IBuildEnvironmentVariable {
 		String name;
@@ -105,6 +106,13 @@ public class EnvVarSupplier implements IConfigurationEnvironmentVariableSupplier
 		return serialPortVar;
 	}
 
+	private IBuildEnvironmentVariable getCygwin() {
+		EnvVar var = new EnvVar();
+		var.name = CYGWIN;
+		var.value = "nodosfilewarning";
+		return var;
+	}
+	
 	@Override
 	public IBuildEnvironmentVariable getVariable(String variableName,
 			IConfiguration configuration, IEnvironmentVariableProvider provider) {
@@ -118,6 +126,8 @@ public class EnvVarSupplier implements IConfigurationEnvironmentVariableSupplier
 			return getBoard(configuration);
 		} else if (variableName.equals(SERIAL_PORT)) {
 			return getSerialPort();
+		} else if (variableName.equals(CYGWIN)) {
+			return getCygwin();
 		}
 		return null;
 	}
@@ -145,6 +155,9 @@ public class EnvVarSupplier implements IConfigurationEnvironmentVariableSupplier
 				vars.add(serialPortVar);
 		}
 
+		if (Platform.getOS().equals(Platform.OS_WIN32))
+			vars.add(getCygwin());
+		
 		return vars.toArray(new IBuildEnvironmentVariable[vars.size()]);
 	}
 
