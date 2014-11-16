@@ -3,6 +3,8 @@ package ca.cdtdoug.wascana.arduino.core.target;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -34,7 +36,14 @@ public class ArduinoTargetRegistry {
 	}
 
 	public Board[] getBoards() {
-		return boards.values().toArray(new Board[boards.size()]);
+		Board[] sortedBoards = boards.values().toArray(new Board[boards.size()]);
+		Arrays.sort(sortedBoards, new Comparator<Board>() {
+			@Override
+			public int compare(Board arg0, Board arg1) {
+				return arg0.getName().compareTo(arg1.getName());
+			}
+		});
+		return sortedBoards;
 	}
 
 	public Board getBoard(String id) {
