@@ -4,22 +4,22 @@ Bundle-Name: Arduino UI
 Bundle-SymbolicName: ca.cdtdoug.wascana.arduino.ui;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: ca.cdtdoug.wascana.arduino.ui.internal.Activator
-Require-Bundle: org.eclipse.ui,
- org.eclipse.core.runtime,
+Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.expressions,
- org.scream3r.jssc,
- org.eclipse.tm.terminal,
- org.eclipse.tcf.te.ui.terminals,
- org.eclipse.tcf.te.runtime,
- org.eclipse.tcf.te.ui.controls,
+ org.eclipse.ui,
  org.eclipse.ui.forms,
- org.eclipse.debug.ui,
- ca.cdtdoug.wascana.arduino.core,
  org.eclipse.ui.console,
  org.eclipse.ui.ide,
- org.eclipse.tcf.te.ui,
+ org.eclipse.debug.ui,
+ org.scream3r.jssc,
+ org.eclipse.tm.terminal,
+ org.eclipse.tcf.te.runtime,
  org.eclipse.tcf.te.runtime.services,
+ org.eclipse.tcf.te.ui,
+ org.eclipse.tcf.te.ui.controls,
+ org.eclipse.tcf.te.ui.terminals,
  org.eclipse.cdt.launchbar.core,
- org.eclipse.cdt.launchbar.ui
+ org.eclipse.cdt.launchbar.ui,
+ ca.cdtdoug.wascana.arduino.core
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
