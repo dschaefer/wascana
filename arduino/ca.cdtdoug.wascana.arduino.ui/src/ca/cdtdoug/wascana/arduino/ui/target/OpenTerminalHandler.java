@@ -2,13 +2,13 @@ package ca.cdtdoug.wascana.arduino.ui.target;
 
 import java.util.Iterator;
 
-import org.eclipse.cdt.launchbar.core.ILaunchTarget;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.launchbar.core.ILaunchTarget;
 import org.eclipse.tcf.te.runtime.interfaces.properties.IPropertiesContainer;
 import org.eclipse.tcf.te.runtime.properties.PropertiesContainer;
 import org.eclipse.ui.handlers.HandlerUtil;

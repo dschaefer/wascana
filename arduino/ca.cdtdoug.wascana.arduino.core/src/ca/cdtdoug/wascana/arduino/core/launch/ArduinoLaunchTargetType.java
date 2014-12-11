@@ -3,9 +3,9 @@ package ca.cdtdoug.wascana.arduino.core.launch;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.cdt.launchbar.core.ILaunchBarManager;
-import org.eclipse.cdt.launchbar.core.ILaunchTargetType;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.launchbar.core.ILaunchBarManager;
+import org.eclipse.launchbar.core.ILaunchTargetType;
 import org.osgi.framework.ServiceReference;
 
 import ca.cdtdoug.wascana.arduino.core.internal.Activator;

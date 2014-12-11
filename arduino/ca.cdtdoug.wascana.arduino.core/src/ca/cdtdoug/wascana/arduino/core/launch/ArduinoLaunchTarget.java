@@ -1,8 +1,8 @@
 package ca.cdtdoug.wascana.arduino.core.launch;
 
-import org.eclipse.cdt.launchbar.core.ILaunchTarget;
-import org.eclipse.cdt.launchbar.core.ILaunchTargetType;
 import org.eclipse.core.runtime.PlatformObject;
+import org.eclipse.launchbar.core.ILaunchTarget;
+import org.eclipse.launchbar.core.ILaunchTargetType;
 
 import ca.cdtdoug.wascana.arduino.core.target.ArduinoTarget;
 

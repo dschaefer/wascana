@@ -1,9 +1,9 @@
 package ca.cdtdoug.wascana.arduino.core.launch;
 
-import org.eclipse.cdt.launchbar.core.ProjectLaunchConfigurationProvider;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunchConfigurationType;
+import org.eclipse.launchbar.core.ProjectLaunchConfigurationProvider;
 
 public class ArduinoLaunchConfigurationProvider extends ProjectLaunchConfigurationProvider {
 

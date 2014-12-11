@@ -1,7 +1,7 @@
 package ca.cdtdoug.wascana.arduino.ui.target;
 
-import org.eclipse.cdt.launchbar.core.ILaunchTarget;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.launchbar.core.ILaunchTarget;
 import org.eclipse.swt.graphics.Image;
 
 import ca.cdtdoug.wascana.arduino.core.target.ArduinoTarget;

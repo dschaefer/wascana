@@ -76,7 +76,7 @@
       </provider>
    </extension>
    <extension
-         point="org.eclipse.cdt.launchbar.core.launchBarContributions">
+         point="org.eclipse.launchbar.core.launchBarContributions">
       <targetType
             class="ca.cdtdoug.wascana.arduino.core.launch.ArduinoLaunchTargetType"
             id="ca.cdtdoug.wascana.arduino.core.targetType">

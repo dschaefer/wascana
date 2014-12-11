@@ -1,10 +1,10 @@
 package ca.cdtdoug.wascana.arduino.core.launch;
 
-import org.eclipse.cdt.launchbar.core.ILaunchDescriptor;
-import org.eclipse.cdt.launchbar.core.ILaunchDescriptorType;
-import org.eclipse.cdt.launchbar.core.ProjectLaunchDescriptor;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.launchbar.core.ILaunchDescriptor;
+import org.eclipse.launchbar.core.ILaunchDescriptorType;
+import org.eclipse.launchbar.core.ProjectLaunchDescriptor;
 
 import ca.cdtdoug.wascana.arduino.core.ArduinoProjectNature;
 
