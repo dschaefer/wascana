@@ -1,7 +1,6 @@
-package ca.cdtdoug.wascana.arduino.core.launch;
+package ca.cdtdoug.wascana.arduino.core.internal.launch;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunchConfigurationType;
 import org.eclipse.launchbar.core.ProjectLaunchConfigurationProvider;
 
@@ -9,7 +8,7 @@ public class ArduinoLaunchConfigurationProvider extends ProjectLaunchConfigurati
 
 	@Override
 	public ILaunchConfigurationType getLaunchConfigurationType() throws CoreException {
-		return DebugPlugin.getDefault().getLaunchManager().getLaunchConfigurationType("ca.cdtdoug.wascana.arduino.core.launchConfigurationType");
+		return ArduinoLaunchConfigurationDelegate.getLaunchConfigurationType();
 	}
 
 }

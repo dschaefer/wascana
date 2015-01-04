@@ -1,4 +1,4 @@
-package ca.cdtdoug.wascana.arduino.core.launch;
+package ca.cdtdoug.wascana.arduino.core.internal.launch;
 
 
 public interface ArduinoLaunchConsoleService {

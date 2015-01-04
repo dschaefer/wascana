@@ -1,4 +1,4 @@
-package ca.cdtdoug.wascana.arduino.ui.target;
+package ca.cdtdoug.wascana.arduino.ui.remote;
 
 import jssc.SerialPortList;
 
@@ -15,7 +15,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
-import ca.cdtdoug.wascana.arduino.core.target.Board;
+import ca.cdtdoug.wascana.arduino.core.remote.Board;
+import ca.cdtdoug.wascana.arduino.core.remote.IArduinoBoardManager;
 import ca.cdtdoug.wascana.arduino.ui.internal.Activator;
 
 public class NewArduinoTargetWizardPage extends WizardPage {
@@ -76,12 +77,14 @@ public class NewArduinoTargetWizardPage extends WizardPage {
 			}
 		});
 
+		IArduinoBoardManager boardManager = Activator.getService(IArduinoBoardManager.class);
+		
 		Label boardLabel = new Label(comp, SWT.NONE);
 		boardLabel.setText("Board type:");
 
 		boardCombo = new Combo(comp, SWT.READ_ONLY);
 		boardCombo.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		boards = Activator.getTargetRegistry().getBoards();
+		boards = boardManager.getBoards().toArray(new Board[0]);
 		for (Board board : boards) {
 			boardCombo.add(board.getName());
 		}

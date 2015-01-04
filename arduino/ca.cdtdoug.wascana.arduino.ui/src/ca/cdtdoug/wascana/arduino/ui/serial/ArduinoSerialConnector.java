@@ -16,15 +16,12 @@ import org.eclipse.tm.internal.terminal.provisional.api.ITerminalControl;
 import org.eclipse.tm.internal.terminal.provisional.api.TerminalState;
 import org.eclipse.tm.internal.terminal.provisional.api.provider.TerminalConnectorImpl;
 
-import ca.cdtdoug.wascana.arduino.core.target.ArduinoTarget;
-import ca.cdtdoug.wascana.arduino.core.target.ArduinoTarget.SerialPortController;
 import ca.cdtdoug.wascana.arduino.ui.internal.Activator;
 
 @SuppressWarnings("restriction")
-public class ArduinoSerialConnector extends TerminalConnectorImpl implements SerialPortEventListener, SerialPortController {
+public class ArduinoSerialConnector extends TerminalConnectorImpl implements SerialPortEventListener {
 
 	private SerialPort serialPort;
-	private ArduinoTarget target;
 	private int baudrate = SerialPort.BAUDRATE_9600;
 	private int databits = SerialPort.DATABITS_8;
 	private int stopbits = SerialPort.STOPBITS_1;
@@ -35,18 +32,11 @@ public class ArduinoSerialConnector extends TerminalConnectorImpl implements Ser
 		super.connect(control);
 		resume();
 		control.setState(TerminalState.CONNECTED);
-
-		if (target != null) {
-			target.addSerialPortController(this);
-		}
 	}
 
 	@Override
 	protected void doDisconnect() {
 		pause();
-		if (target != null) {
-			target.removeSerialPortController(this);
-		}
 	}
 
 	@Override
@@ -81,8 +71,7 @@ public class ArduinoSerialConnector extends TerminalConnectorImpl implements Ser
 
 	@Override
 	public void load(ISettingsStore store) {
-		String targetName = store.get(ArduinoSerialMonitorDelegate.TARGET_NAME);
-		target = Activator.getTargetRegistry().getTarget(targetName);
+//		String targetName = store.get(ArduinoSerialMonitorDelegate.TARGET_NAME);
 	}
 
 	@Override
@@ -100,7 +89,6 @@ public class ArduinoSerialConnector extends TerminalConnectorImpl implements Ser
 		}
 	}
 
-	@Override
 	public void pause() {
 		if (serialPort == null)
 			return;
@@ -117,14 +105,10 @@ public class ArduinoSerialConnector extends TerminalConnectorImpl implements Ser
 		}
 	}
 
-	@Override
 	public void resume() {
 		try {
-			if (target == null) {
-				throw new IOException("No Target");
-			}
 			if (serialPort == null)
-				serialPort = new SerialPort(target.getPortName());
+				serialPort = new SerialPort("");
 			else {
 				PrintStream out = new PrintStream(fControl.getRemoteToTerminalOutputStream());
 				out.print("+++ Restart +++\r\n");
@@ -132,10 +116,6 @@ public class ArduinoSerialConnector extends TerminalConnectorImpl implements Ser
 			serialPort.openPort();
 			serialPort.setParams(baudrate, databits, stopbits, parity);
 			serialPort.addEventListener(this, SerialPort.MASK_RXCHAR);
-		} catch (IOException e) {
-			Activator.getDefault().getLog().log(new Status(IStatus.ERROR, Activator.getId(), e.getLocalizedMessage(), e));
-			PrintStream out = new PrintStream(fControl.getRemoteToTerminalOutputStream());
-			out.println(e.getLocalizedMessage());
 		} catch (SerialPortException e) {
 			Activator.getDefault().getLog().log(new Status(IStatus.ERROR, Activator.getId(), e.getLocalizedMessage(), e));
 			PrintStream out = new PrintStream(fControl.getRemoteToTerminalOutputStream());

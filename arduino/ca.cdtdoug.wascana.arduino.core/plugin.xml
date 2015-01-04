@@ -77,30 +77,26 @@
    </extension>
    <extension
          point="org.eclipse.launchbar.core.launchBarContributions">
-      <targetType
-            class="ca.cdtdoug.wascana.arduino.core.launch.ArduinoLaunchTargetType"
-            id="ca.cdtdoug.wascana.arduino.core.targetType">
-      </targetType>
       <descriptorType
-            class="ca.cdtdoug.wascana.arduino.core.launch.ArduinoLaunchDescriptorType"
+            class="ca.cdtdoug.wascana.arduino.core.internal.launch.ArduinoLaunchDescriptorType"
             id="ca.cdtdoug.wascana.arduino.core.descriptorType"
             priority="5">
       </descriptorType>
       <configProvider
-            class="ca.cdtdoug.wascana.arduino.core.launch.ArduinoLaunchConfigurationProvider"
+            class="ca.cdtdoug.wascana.arduino.core.internal.launch.ArduinoLaunchConfigurationProvider"
             launchConfigurationType="ca.cdtdoug.wascana.arduino.core.launchConfigurationType">
       </configProvider>
       <configType
             descriptorType="ca.cdtdoug.wascana.arduino.core.descriptorType"
             isDefault="true"
             launchConfigurationType="ca.cdtdoug.wascana.arduino.core.launchConfigurationType"
-            targetType="ca.cdtdoug.wascana.arduino.core.targetType">
+            remoteType="ca.cdtdoug.wascana.arduino.core.remoteServices">
       </configType>
    </extension>
    <extension
          point="org.eclipse.debug.core.launchConfigurationTypes">
       <launchConfigurationType
-            delegate="ca.cdtdoug.wascana.arduino.core.launch.ArduinoLaunchConfigurationDelegate"
+            delegate="ca.cdtdoug.wascana.arduino.core.internal.launch.ArduinoLaunchConfigurationDelegate"
             id="ca.cdtdoug.wascana.arduino.core.launchConfigurationType"
             modes="run"
             name="Arduino">
@@ -124,5 +120,18 @@
                class="ca.cdtdoug.wascana.arduino.core.ArduinoProjectNature">
          </run>
       </runtime>
+   </extension>
+   <extension
+         point="org.eclipse.launchbar.core.remoteServices2">
+      <remoteServices
+            id="ca.cdtdoug.wascana.arduino.core.remoteServices"
+            isAutoPopulated="false"
+            name="Arduino">
+      </remoteServices>
+      <service
+            factory="ca.cdtdoug.wascana.arduino.core.internal.remote.ArduinoConnectionManager$Factory"
+            remoteServicesId="ca.cdtdoug.wascana.arduino.core.remoteServices"
+            service="org.eclipse.remote.core.api2.IRemoteConnectionManager">
+      </service>
    </extension>
 </plugin>

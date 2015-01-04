@@ -8,6 +8,7 @@ import java.io.PipedOutputStream;
 import java.io.Writer;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,15 +37,22 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.osgi.util.tracker.ServiceTracker;
+import org.eclipse.remote.core.api2.IRemoteConnection;
+import org.eclipse.remote.core.api2.IRemoteConnectionManager;
+import org.eclipse.remote.core.api2.IRemoteLaunchConfigManagerService;
+import org.eclipse.remote.core.api2.IRemoteManager;
+import org.eclipse.remote.core.api2.IRemoteServices;
 
 import ca.cdtdoug.wascana.arduino.core.internal.Activator;
-import ca.cdtdoug.wascana.arduino.core.target.ArduinoTarget;
-import ca.cdtdoug.wascana.arduino.core.target.ArduinoTargetRegistry;
-import ca.cdtdoug.wascana.arduino.core.target.Board;
+import ca.cdtdoug.wascana.arduino.core.internal.launch.ArduinoLaunchConfigurationDelegate;
+import ca.cdtdoug.wascana.arduino.core.internal.remote.ArduinoRemoteConnection;
+import ca.cdtdoug.wascana.arduino.core.remote.Board;
+import ca.cdtdoug.wascana.arduino.core.remote.IArduinoBoardManager;
+import ca.cdtdoug.wascana.arduino.core.remote.IArduinoRemoteConnection;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 
+@SuppressWarnings("restriction")
 public class ArduinoProjectGenerator {
 
 	public static final String BOARD_OPTION_ID = "ca.cdtdoug.wascana.arduino.core.option.board";
@@ -75,20 +83,28 @@ public class ArduinoProjectGenerator {
 		ManagedBuildInfo info = ManagedBuildManager.createBuildInfo(project);
 		ManagedProject mProj = new ManagedProject(cprojDesc);
 		info.setManagedProject(mProj);
-		
-		ArduinoTargetRegistry targetRegistry = Activator.getTargetRegistry();
+
 		Board board = null;
 		
-		if (targetRegistry.getActiveTarget() != null) {
-			board = targetRegistry.getActiveTarget().getBoard();
+		IRemoteManager remoteManager = Activator.getService(IRemoteManager.class);
+		IRemoteLaunchConfigManagerService remoteLaunchService = Activator.getService(IRemoteLaunchConfigManagerService.class);
+		IRemoteConnection remoteConnection = remoteLaunchService.getLastActiveRemote(ArduinoLaunchConfigurationDelegate.getLaunchConfigurationType());
+		if (remoteConnection != null) {
+			IArduinoRemoteConnection arduinoRemote = remoteConnection.getService(IArduinoRemoteConnection.class);
+			board = arduinoRemote.getBoard();
 		} else {
-			ArduinoTarget[] targets = targetRegistry.getTargets();
-			if (targets.length > 0)
-				board = targets[0].getBoard();
+			IRemoteServices remoteServices = remoteManager.getRemoteServices(ArduinoRemoteConnection.TYPE_ID);
+			Collection<IRemoteConnection> connections = remoteServices.getService(IRemoteConnectionManager.class).getConnections();
+			if (!connections.isEmpty()) {
+				IRemoteConnection firstConnection = connections.iterator().next();
+				IArduinoRemoteConnection firstArduino = firstConnection.getService(IArduinoRemoteConnection.class);
+				board = firstArduino.getBoard();
+			}
 		}
 		
 		if (board == null) {
-			board = targetRegistry.getBoard("uno"); // the default
+			IArduinoBoardManager boardManager = Activator.getService(IArduinoBoardManager.class);
+			board = boardManager.getBoard("uno"); // the default
 		}
 		
 		createBuildConfiguration(cprojDesc, board);
@@ -166,9 +182,12 @@ public class ArduinoProjectGenerator {
 			IToolChain toolChain = configuration.getToolChain();
 			IOption boardOption = toolChain.getOptionBySuperClassId(BOARD_OPTION_ID);
 			String boardId = boardOption.getStringValue();
-			Board board = Activator.getTargetRegistry().getBoard(boardId);
-			if (board == null)
-				board = Activator.getTargetRegistry().getBoard("uno");
+			
+			IArduinoBoardManager boardManager = Activator.getService(IArduinoBoardManager.class);
+			Board board = boardManager.getBoard(boardId);
+			if (board == null) {
+				board = boardManager.getBoard("uno");
+			}
 			return board;
 		} catch (BuildException e) {
 			throw new CoreException(new Status(IStatus.ERROR, Activator.getId(), e.getLocalizedMessage(), e));

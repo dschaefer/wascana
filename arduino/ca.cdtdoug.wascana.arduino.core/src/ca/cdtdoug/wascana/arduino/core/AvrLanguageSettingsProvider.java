@@ -10,7 +10,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Platform;
 
 import ca.cdtdoug.wascana.arduino.core.internal.Activator;
-import ca.cdtdoug.wascana.arduino.core.target.Board;
+import ca.cdtdoug.wascana.arduino.core.remote.Board;
 
 public class AvrLanguageSettingsProvider extends GCCBuiltinSpecsDetector {
 

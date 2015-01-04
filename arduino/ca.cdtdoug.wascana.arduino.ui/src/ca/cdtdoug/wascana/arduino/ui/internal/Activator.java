@@ -4,9 +4,7 @@ import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
-import org.osgi.util.tracker.ServiceTracker;
-
-import ca.cdtdoug.wascana.arduino.core.target.ArduinoTargetRegistry;
+import org.osgi.framework.ServiceReference;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -21,22 +19,15 @@ public class Activator extends AbstractUIPlugin {
 	// The shared instance
 	private static Activator plugin;
 	
-	private static ServiceTracker<ArduinoTargetRegistry, ArduinoTargetRegistry> targetRegistryServiceTracker;
-	private static ArduinoTargetRegistry targetRegistry;
-
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
-		targetRegistryServiceTracker = new ServiceTracker<>(context, ArduinoTargetRegistry.class, null);
-		targetRegistryServiceTracker.open();
-		targetRegistry = targetRegistryServiceTracker.getService();
 
 		ImageRegistry imageRegistry = getImageRegistry();
 		imageRegistry.put(IMG_ARDUINO, imageDescriptorFromPlugin(PLUGIN_ID, "icons/logo.png"));
 	}
 
 	public void stop(BundleContext context) throws Exception {
-		targetRegistryServiceTracker.close();
 		plugin = null;
 		super.stop(context);
 	}
@@ -58,12 +49,14 @@ public class Activator extends AbstractUIPlugin {
 		return plugin.getBundle().getSymbolicName();
 	}
 
-	public static ArduinoTargetRegistry getTargetRegistry() {
-		return targetRegistry;
-	}
-
 	public Image getImage(String id) {
 		return getImageRegistry().get(id);
+	}
+
+	public static <T> T getService(Class<T> service) {
+		BundleContext context = plugin.getBundle().getBundleContext();
+		ServiceReference<T> ref = context.getServiceReference(service);
+		return ref != null ? context.getService(ref) : null;
 	}
 
 }

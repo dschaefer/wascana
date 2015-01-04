@@ -12,8 +12,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Platform;
 
 import ca.cdtdoug.wascana.arduino.core.internal.Activator;
-import ca.cdtdoug.wascana.arduino.core.target.ArduinoTarget;
-import ca.cdtdoug.wascana.arduino.core.target.Board;
+import ca.cdtdoug.wascana.arduino.core.remote.Board;
 
 public class EnvVarSupplier implements IConfigurationEnvironmentVariableSupplier {
 
@@ -22,7 +21,6 @@ public class EnvVarSupplier implements IConfigurationEnvironmentVariableSupplier
 	
 	private static final String OUTPUT_DIR = "OUTPUT_DIR";
 	private static final String BOARD = "BOARD";
-	private static final String SERIAL_PORT = "SERIAL_PORT";
 	private static final String CYGWIN = "CYGWIN";
 
 	private static final class EnvVar implements IBuildEnvironmentVariable {
@@ -95,17 +93,6 @@ public class EnvVarSupplier implements IConfigurationEnvironmentVariableSupplier
 		}
 	}
 
-	private IBuildEnvironmentVariable getSerialPort() {
-		ArduinoTarget activeTarget = Activator.getTargetRegistry().getActiveTarget();
-		if (activeTarget == null)
-			return null;
-		
-		EnvVar serialPortVar = new EnvVar();
-		serialPortVar.name = SERIAL_PORT;
-		serialPortVar.value = activeTarget.getPortName();
-		return serialPortVar;
-	}
-
 	private IBuildEnvironmentVariable getCygwin() {
 		EnvVar var = new EnvVar();
 		var.name = CYGWIN;
@@ -124,8 +111,6 @@ public class EnvVarSupplier implements IConfigurationEnvironmentVariableSupplier
 			return getOutputDir(configuration);
 		} else if (variableName.equals(BOARD)) {
 			return getBoard(configuration);
-		} else if (variableName.equals(SERIAL_PORT)) {
-			return getSerialPort();
 		} else if (variableName.equals(CYGWIN)) {
 			return getCygwin();
 		}
@@ -149,10 +134,6 @@ public class EnvVarSupplier implements IConfigurationEnvironmentVariableSupplier
 			IBuildEnvironmentVariable boardVar = getBoard(configuration);
 			if (boardVar != null)
 				vars.add(boardVar);
-			
-			IBuildEnvironmentVariable serialPortVar = getSerialPort();
-			if (serialPortVar != null)
-				vars.add(serialPortVar);
 		}
 
 		if (Platform.getOS().equals(Platform.OS_WIN32))

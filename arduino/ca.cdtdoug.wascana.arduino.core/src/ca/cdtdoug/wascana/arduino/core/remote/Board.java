@@ -1,4 +1,4 @@
-package ca.cdtdoug.wascana.arduino.core.target;
+package ca.cdtdoug.wascana.arduino.core.remote;
 
 import java.util.Properties;
 

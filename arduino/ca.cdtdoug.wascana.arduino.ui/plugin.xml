@@ -43,7 +43,7 @@
       <wizard
             canFinishEarly="false"
             category="ca.cdtdoug.wascana.arduino.ui.newCategory"
-            class="ca.cdtdoug.wascana.arduino.ui.target.NewArduinoTargetWizard"
+            class="ca.cdtdoug.wascana.arduino.ui.remote.NewArduinoTargetWizard"
             hasPages="true"
             icon="icons/logo.png"
             id="ca.cdtdoug.wascana.arduino.ui.newTargetWizard"
@@ -66,77 +66,25 @@
       </provider>
    </extension>
    <extension
-         point="org.eclipse.ui.commands">
-      <command
-            defaultHandler="ca.cdtdoug.wascana.arduino.ui.target.DeleteTargetHandler"
-            id="ca.cdtdoug.wascana.arduino.ui.command.deleteTarget"
-            name="Delete">
-      </command>
-      <command
-            defaultHandler="ca.cdtdoug.wascana.arduino.ui.target.OpenTerminalHandler"
-            id="ca.cdtdoug.wascana.arduino.ui.command.openTerminal"
-            name="Open Serial Monitor">
-      </command>
-   </extension>
-   <extension
-         point="org.eclipse.ui.menus">
-      <menuContribution
-            allPopups="false"
-            locationURI="popup:org.eclipse.cdt.launchbar.ui.targetsView">
-         <command
-               commandId="ca.cdtdoug.wascana.arduino.ui.command.deleteTarget"
-               style="push">
-            <visibleWhen
-                  checkEnabled="false">
-               <with
-                     variable="activeMenuSelection">
-                  <iterate>
-                     <adapt
-                           type="ca.cdtdoug.wascana.arduino.core.target.ArduinoTarget">
-                     </adapt>
-                  </iterate>
-               </with>
-            </visibleWhen>
-         </command>
-         <command
-               commandId="ca.cdtdoug.wascana.arduino.ui.command.openTerminal"
-               style="push">
-            <visibleWhen
-                  checkEnabled="false">
-               <with
-                     variable="activeMenuSelection">
-                  <iterate>
-                     <adapt
-                           type="ca.cdtdoug.wascana.arduino.core.target.ArduinoTarget">
-                     </adapt>
-                  </iterate>
-               </with>
-            </visibleWhen>
-         </command>
-      </menuContribution>
-   </extension>
-   <extension
          point="org.eclipse.ui.propertyPages">
       <page
-            class="ca.cdtdoug.wascana.arduino.ui.target.ArduinoTargetPropertyPage"
+            class="ca.cdtdoug.wascana.arduino.ui.remote.ArduinoTargetPropertyPage"
             id="ca.cdtdoug.wascana.arduino.ui.targetPropertyPage"
             name="Arduino"
             selectionFilter="single">
          <enabledWhen>
             <adapt
-                  type="ca.cdtdoug.wascana.arduino.core.target.ArduinoTarget">
+                  type="ca.cdtdoug.wascana.arduino.core.remote.IArduinoRemoteConnection">
             </adapt>
          </enabledWhen>
       </page>
    </extension>
    <extension
-         point="org.eclipse.launchbar.ui.launchBarUIContributions">
-      <targetUI
-            icon="platform:/plugin/ca.cdtdoug.wascana.arduino.ui/icons/logo.png"
-            labelProvider="ca.cdtdoug.wascana.arduino.ui.target.ArduinoTargetLabelProvider"
-            name="Arduino"
-            newWizard="ca.cdtdoug.wascana.arduino.ui.target.NewArduinoTargetWizard"
-            targetTypeId="ca.cdtdoug.wascana.arduino.core.targetType">
-      </targetUI>
+         point="org.eclipse.launchbar.core.remoteServices2">
+      <service
+            factory="ca.cdtdoug.wascana.arduino.ui.remote.ArduinoRemoteServicesUI$Factory"
+            remoteServicesId="ca.cdtdoug.wascana.arduino.core.remoteServices"
+            service="org.eclipse.remote.ui.api2.IRemoteServicesUI">
+      </service>
    </extension>
 </plugin>

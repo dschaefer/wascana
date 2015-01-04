@@ -1,4 +1,4 @@
-package ca.cdtdoug.wascana.arduino.core.launch;
+package ca.cdtdoug.wascana.arduino.core.internal.launch;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;

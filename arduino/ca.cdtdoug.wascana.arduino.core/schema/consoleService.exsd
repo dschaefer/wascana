@@ -55,7 +55,7 @@
                   
                </documentation>
                <appinfo>
-                  <meta.attribute kind="java" basedOn=":ca.cdtdoug.wascana.arduino.core.launch.ArduinoLaunchConsoleService"/>
+                  <meta.attribute kind="java" basedOn=":ca.cdtdoug.wascana.arduino.core.internal.launch.ArduinoLaunchConsoleService"/>
                </appinfo>
             </annotation>
          </attribute>

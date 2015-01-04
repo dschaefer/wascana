@@ -1,5 +1,9 @@
 package ca.cdtdoug.wascana.arduino.ui.serial;
 
+import org.eclipse.remote.core.api2.IRemoteConnection;
+import org.eclipse.remote.core.api2.IRemoteConnectionManager;
+import org.eclipse.remote.core.api2.IRemoteManager;
+import org.eclipse.remote.core.api2.IRemoteServices;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.TypedEvent;
 import org.eclipse.swt.layout.GridData;
@@ -15,14 +19,13 @@ import org.eclipse.tcf.te.ui.interfaces.data.IDataExchangeNode;
 import org.eclipse.tcf.te.ui.terminals.panels.AbstractConfigurationPanel;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
-import ca.cdtdoug.wascana.arduino.core.target.ArduinoTarget;
-import ca.cdtdoug.wascana.arduino.core.target.ArduinoTargetRegistry;
+import ca.cdtdoug.wascana.arduino.core.remote.IArduinoRemoteConnection;
 import ca.cdtdoug.wascana.arduino.ui.internal.Activator;
 
 public class ArduinoSerialMonitorPanel extends AbstractConfigurationPanel implements IDataExchangeNode {
 
 	private Combo targetSelector;
-	private ArduinoTarget[] targets;
+	private IRemoteConnection[] targets;
 
 	public ArduinoSerialMonitorPanel(BaseDialogPageControl parentControl) {
 		super(parentControl);
@@ -43,22 +46,24 @@ public class ArduinoSerialMonitorPanel extends AbstractConfigurationPanel implem
 		Label targetLabel = new Label(targetComp, SWT.NONE);
 		targetLabel.setText("Arduino Target:");
 
-		ArduinoTargetRegistry targetRegistry = Activator.getTargetRegistry();
-		targets = targetRegistry.getTargets();
+		IRemoteManager remoteManager = Activator.getService(IRemoteManager.class);
+		IRemoteServices remoteServices = remoteManager.getRemoteServices(IArduinoRemoteConnection.TYPE_ID);
+		IRemoteConnectionManager connectionManager = remoteServices.getService(IRemoteConnectionManager.class); 
+		targets = connectionManager.getConnections().toArray(new IRemoteConnection[0]);
 		
 		if (targets.length > 0) {
 			targetSelector = new Combo(targetComp, SWT.READ_ONLY);
 			targetSelector.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 	
-			ArduinoTarget activeTarget = targetRegistry.getActiveTarget();
-			int i = 0, activeTargetIndex = -1;
-			for (ArduinoTarget target : targets) {
-				targetSelector.add(target.getName());
-				if (target.equals(activeTarget))
-					activeTargetIndex = i;
-				i++;
-			}
-			targetSelector.select(activeTargetIndex);
+//			ArduinoRemoteConnection activeTarget = targetRegistry.getActiveTarget();
+//			int i = 0, activeTargetIndex = -1;
+//			for (ArduinoRemoteConnection target : targets) {
+//				targetSelector.add(target.getName());
+//				if (target.equals(activeTarget))
+//					activeTargetIndex = i;
+//				i++;
+//			}
+//			targetSelector.select(activeTargetIndex);
 		} else {
 			Label noTarget = new Label(targetComp, SWT.NONE);
 			noTarget.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
@@ -101,7 +106,7 @@ public class ArduinoSerialMonitorPanel extends AbstractConfigurationPanel implem
 		// nothing
 	}
 
-	public static void extractData(IPropertiesContainer data, ArduinoTarget target) {
+	public static void extractData(IPropertiesContainer data, IRemoteConnection target) {
 		data.setProperty(ArduinoSerialMonitorDelegate.TARGET_NAME, target.getName());
 
 		data.setProperty(ITerminalsConnectorConstants.PROP_TERMINAL_CONNECTOR_ID, ArduinoSerialConnectorType.ID);
@@ -112,7 +117,7 @@ public class ArduinoSerialMonitorPanel extends AbstractConfigurationPanel implem
 
 	@Override
 	public void extractData(IPropertiesContainer data) {
-		ArduinoTarget target = targets[targetSelector.getSelectionIndex()];
+		IRemoteConnection target = targets[targetSelector.getSelectionIndex()];
 		extractData(data, target);
 	}
 
