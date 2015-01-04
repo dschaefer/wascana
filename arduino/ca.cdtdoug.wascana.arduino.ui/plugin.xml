@@ -87,4 +87,11 @@
             service="org.eclipse.remote.ui.api2.IRemoteServicesUI">
       </service>
    </extension>
+   <extension
+         point="org.eclipse.launchbar.ui.launchBarUIContributions">
+      <descriptorUI
+            descriptorTypeId="ca.cdtdoug.wascana.arduino.core.descriptorType"
+            labelProvider="ca.cdtdoug.wascana.arduino.ui.launch.ArduinoDescriptorLabelProvider">
+      </descriptorUI>
+   </extension>
 </plugin>

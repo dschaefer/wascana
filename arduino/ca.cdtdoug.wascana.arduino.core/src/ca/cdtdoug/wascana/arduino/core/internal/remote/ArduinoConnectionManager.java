@@ -13,10 +13,8 @@ import org.eclipse.remote.core.exception.RemoteConnectionException;
 
 public class ArduinoConnectionManager extends AbstractRemoteConnectionManager implements IRemoteConnectionManager {
 
-	private final IRemoteServices remoteServices;
-
 	private ArduinoConnectionManager(IRemoteServices remoteServices) {
-		this.remoteServices = remoteServices;
+		super(remoteServices);
 	}
 	
 	public static class Factory implements IRemoteServices.Service.Factory {
@@ -27,11 +25,6 @@ public class ArduinoConnectionManager extends AbstractRemoteConnectionManager im
 	}
 
 	@Override
-	public IRemoteServices getRemoteServices() {
-		return remoteServices;
-	}
-
-	@Override
 	public IUserAuthenticator getUserAuthenticator(IRemoteConnection connection) {
 		// TODO Auto-generated method stub
 		return null;
@@ -39,12 +32,12 @@ public class ArduinoConnectionManager extends AbstractRemoteConnectionManager im
 
 	@Override
 	public IRemoteConnectionWorkingCopy newConnection(String name) throws RemoteConnectionException {
-		return new ArduinoRemoteConnectionWorkingCopy(remoteServices, name);
+		return new ArduinoRemoteConnectionWorkingCopy(getRemoteServices(), name);
 	}
 
 	@Override
 	public IRemoteConnection loadConnection(String name, Properties properties) throws RemoteConnectionException {
-		return new ArduinoRemoteConnection(remoteServices, name, properties);
+		return new ArduinoRemoteConnection(getRemoteServices(), name, properties);
 	}
 
 }

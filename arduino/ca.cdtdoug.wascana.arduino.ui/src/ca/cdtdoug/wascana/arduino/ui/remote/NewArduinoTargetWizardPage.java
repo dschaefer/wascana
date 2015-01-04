@@ -3,6 +3,11 @@ package ca.cdtdoug.wascana.arduino.ui.remote;
 import jssc.SerialPortList;
 
 import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.remote.core.api2.IRemoteConnectionManager;
+import org.eclipse.remote.core.api2.IRemoteConnectionWorkingCopy;
+import org.eclipse.remote.core.api2.IRemoteManager;
+import org.eclipse.remote.core.api2.IRemoteServices;
+import org.eclipse.remote.core.exception.RemoteConnectionException;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
@@ -17,6 +22,8 @@ import org.eclipse.swt.widgets.Text;
 
 import ca.cdtdoug.wascana.arduino.core.remote.Board;
 import ca.cdtdoug.wascana.arduino.core.remote.IArduinoBoardManager;
+import ca.cdtdoug.wascana.arduino.core.remote.IArduinoRemoteConnection;
+import ca.cdtdoug.wascana.arduino.core.remote.IArduinoRemoteConnectionWorkingCopy;
 import ca.cdtdoug.wascana.arduino.ui.internal.Activator;
 
 public class NewArduinoTargetWizardPage extends WizardPage {
@@ -112,4 +119,22 @@ public class NewArduinoTargetWizardPage extends WizardPage {
 		setPageComplete(!name.isEmpty() && portName != null && board != null);
 	}
 
+	boolean performFinish() {
+		IRemoteManager remoteManager = Activator.getService(IRemoteManager.class);
+		IRemoteServices remoteServices = remoteManager.getRemoteServices(IArduinoRemoteConnection.TYPE_ID);
+		IRemoteConnectionManager connManager = remoteServices.getService(IRemoteConnectionManager.class);
+		try {
+			IRemoteConnectionWorkingCopy workingCopy = connManager.newConnection(name);
+			IArduinoRemoteConnectionWorkingCopy arduinowc = workingCopy.getWorkingCopyService(IArduinoRemoteConnectionWorkingCopy.class);
+			arduinowc.setPortName(portName);
+			arduinowc.setBoard(board);
+			workingCopy.save();
+		} catch (RemoteConnectionException e) {
+			Activator.getDefault().getLog().log(e.getStatus());
+			return false;
+		}
+		
+		return true;
+	}
+	
 }

@@ -21,8 +21,7 @@ public class NewArduinoTargetWizard extends Wizard implements INewWizard {
 	
 	@Override
 	public boolean performFinish() {
-		// TODO add the new connection
-		return true;
+		return page.performFinish();
 	}
 
 }

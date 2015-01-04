@@ -22,10 +22,6 @@ public class ArduinoRemoteConnection extends AbstractRemoteConnection implements
 	private Board board;
 	private boolean isOpen;
 
-	public ArduinoRemoteConnection(IRemoteServices remoteServices, String name) {
-		super(remoteServices, name);
-	}
-
 	public ArduinoRemoteConnection(IRemoteServices remoteServices, String name, Properties properties) {
 		super(remoteServices, name, properties);
 		init();

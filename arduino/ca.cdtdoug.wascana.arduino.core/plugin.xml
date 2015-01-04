@@ -90,7 +90,7 @@
             descriptorType="ca.cdtdoug.wascana.arduino.core.descriptorType"
             isDefault="true"
             launchConfigurationType="ca.cdtdoug.wascana.arduino.core.launchConfigurationType"
-            remoteType="ca.cdtdoug.wascana.arduino.core.remoteServices">
+            targetType="ca.cdtdoug.wascana.arduino.core.remoteServices">
       </configType>
    </extension>
    <extension
