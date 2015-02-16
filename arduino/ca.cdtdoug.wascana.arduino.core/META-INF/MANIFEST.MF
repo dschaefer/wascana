@@ -11,9 +11,9 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.cdt.core,
  org.eclipse.cdt.managedbuilder.core,
  org.eclipse.cdt.managedbuilder.gnu.ui,
- org.scream3r.jssc,
  org.freemarker,
- org.eclipse.launchbar.core;bundle-version="[1.0.0,2.0.0)"
+ org.eclipse.launchbar.core,
+ org.eclipse.remote.core;bundle-version="2.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Export-Package: ca.cdtdoug.wascana.arduino.core,

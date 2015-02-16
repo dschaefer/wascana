@@ -18,15 +18,6 @@
       </delegate>
    </extension>
    <extension
-         point="org.eclipse.tm.terminal.terminalConnectors">
-      <connector
-            class="ca.cdtdoug.wascana.arduino.ui.serial.ArduinoSerialConnector"
-            hidden="false"
-            id="ca.cdtdoug.wascana.arduino.serial.connector"
-            name="Arduino Serial Monitor">
-      </connector>
-   </extension>
-   <extension
          point="org.eclipse.debug.ui.launchConfigurationTypeImages">
       <launchConfigurationTypeImage
             configTypeID="ca.cdtdoug.wascana.arduino.core.launchConfigurationType"
@@ -80,18 +71,18 @@
       </page>
    </extension>
    <extension
-         point="org.eclipse.launchbar.core.remoteServices2">
-      <service
-            factory="ca.cdtdoug.wascana.arduino.ui.remote.ArduinoRemoteServicesUI$Factory"
-            remoteServicesId="ca.cdtdoug.wascana.arduino.core.remoteServices"
-            service="org.eclipse.remote.ui.api2.IRemoteServicesUI">
-      </service>
-   </extension>
-   <extension
          point="org.eclipse.launchbar.ui.launchBarUIContributions">
       <descriptorUI
             descriptorTypeId="ca.cdtdoug.wascana.arduino.core.descriptorType"
             labelProvider="ca.cdtdoug.wascana.arduino.ui.launch.ArduinoDescriptorLabelProvider">
       </descriptorUI>
+   </extension>
+   <extension
+         point="org.eclipse.remote.core.remoteServices">
+      <connectionTypeService
+            connectionTypeId="ca.cdtdoug.wascana.arduino.core.connectionType"
+            factory="ca.cdtdoug.wascana.arduino.ui.remote.ArduinoRemoteServicesUI$Factory"
+            service="org.eclipse.remote.ui.IRemoteUIConnectionService">
+      </connectionTypeService>
    </extension>
 </plugin>

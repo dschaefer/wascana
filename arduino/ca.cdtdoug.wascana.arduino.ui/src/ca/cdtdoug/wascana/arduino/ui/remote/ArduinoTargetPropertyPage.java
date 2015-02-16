@@ -2,10 +2,10 @@ package ca.cdtdoug.wascana.arduino.ui.remote;
 
 import java.util.Collection;
 
-import jssc.SerialPortList;
-
-import org.eclipse.remote.core.api2.IRemoteConnection;
-import org.eclipse.remote.core.api2.IRemoteConnectionWorkingCopy;
+import org.eclipse.cdt.utils.serial.SerialPort;
+import org.eclipse.remote.core.IRemoteConnection;
+import org.eclipse.remote.core.IRemoteConnectionWorkingCopy;
+import org.eclipse.remote.core.exception.RemoteConnectionException;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -19,7 +19,6 @@ import org.eclipse.ui.dialogs.PropertyPage;
 import ca.cdtdoug.wascana.arduino.core.remote.Board;
 import ca.cdtdoug.wascana.arduino.core.remote.IArduinoBoardManager;
 import ca.cdtdoug.wascana.arduino.core.remote.IArduinoRemoteConnection;
-import ca.cdtdoug.wascana.arduino.core.remote.IArduinoRemoteConnectionWorkingCopy;
 import ca.cdtdoug.wascana.arduino.ui.internal.Activator;
 
 public class ArduinoTargetPropertyPage extends PropertyPage implements IWorkbenchPropertyPage {
@@ -45,7 +44,7 @@ public class ArduinoTargetPropertyPage extends PropertyPage implements IWorkbenc
 
 		String currentPort = arduinoRemote.getPortName();
 		int i = 0, portSel = -1;
-		for (String port : SerialPortList.getPortNames()) {
+		for (String port : SerialPort.list()) {
 			portSelector.add(port);
 			if (port.equals(currentPort)) {
 				portSel = i;
@@ -90,15 +89,18 @@ public class ArduinoTargetPropertyPage extends PropertyPage implements IWorkbenc
 	public boolean performOk() {
 		IRemoteConnection remoteConnection = (IRemoteConnection) getElement().getAdapter(IRemoteConnection.class);
 		IRemoteConnectionWorkingCopy workingCopy = remoteConnection.getWorkingCopy();
-		IArduinoRemoteConnectionWorkingCopy arduinoWorkingCopy = workingCopy.getWorkingCopyService(IArduinoRemoteConnectionWorkingCopy.class);
 
 		String portName = portSelector.getItem(portSelector.getSelectionIndex());
-		arduinoWorkingCopy.setPortName(portName);
+		workingCopy.setAttribute(IArduinoRemoteConnection.PORT_NAME, portName);
 
 		Board board = boards[boardSelector.getSelectionIndex()];
-		arduinoWorkingCopy.setBoard(board);
+		workingCopy.setAttribute(IArduinoRemoteConnection.BOARD_ID, board.getId());
 
-		workingCopy.save();
+		try {
+			workingCopy.save();
+		} catch (RemoteConnectionException e) {
+			Activator.getDefault().getLog().log(e.getStatus());
+		}
 		return true;
 	}
 	

@@ -1,7 +1,6 @@
 package ca.cdtdoug.wascana.arduino.core.remote;
 
-import org.eclipse.remote.core.api2.IRemoteConnection;
-
+import org.eclipse.remote.core.IRemoteConnection;
 
 /**
  * Arduino specific extensions to IRemoteConnection.
@@ -11,10 +10,9 @@ import org.eclipse.remote.core.api2.IRemoteConnection;
  */
 public interface IArduinoRemoteConnection extends IRemoteConnection.Service {
 
-	final String TYPE_ID = "ca.cdtdoug.wascana.arduino.core.remoteServices";
+	final String TYPE_ID = "ca.cdtdoug.wascana.arduino.core.connectionType";
 	final String PORT_NAME = "ardiuno.portname";
 	final String BOARD_ID = "arduino.board";
-
 
 	/**
 	 * Return the serial port name.
@@ -30,4 +28,8 @@ public interface IArduinoRemoteConnection extends IRemoteConnection.Service {
 	 */
 	Board getBoard();
 	
+	void pause();
+
+	void resume();
+
 }

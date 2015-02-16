@@ -1,6 +1,9 @@
 package ca.cdtdoug.wascana.arduino.core.internal;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Plugin;
+import org.eclipse.core.runtime.Status;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 
@@ -21,6 +24,14 @@ public class Activator extends Plugin {
 
 	public static String getId() {
 		return plugin.getBundle().getSymbolicName();
+	}
+
+	public static void log(Exception e) {
+		if (e instanceof CoreException) {
+			plugin.getLog().log(((CoreException) e).getStatus());
+		} else {
+			plugin.getLog().log(new Status(IStatus.ERROR, Activator.getId(), e.getLocalizedMessage(), e));
+		}
 	}
 
 	public void start(BundleContext bundleContext) throws Exception {

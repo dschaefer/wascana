@@ -90,8 +90,12 @@
             descriptorType="ca.cdtdoug.wascana.arduino.core.descriptorType"
             isDefault="true"
             launchConfigurationType="ca.cdtdoug.wascana.arduino.core.launchConfigurationType"
-            targetType="ca.cdtdoug.wascana.arduino.core.remoteServices">
+            targetType="ca.cdtdoug.wascana.arduino.core.targetType">
       </configType>
+      <targetType
+            connectionTypeId="ca.cdtdoug.wascana.arduino.core.connectionType"
+            id="ca.cdtdoug.wascana.arduino.core.targetType">
+      </targetType>
    </extension>
    <extension
          point="org.eclipse.debug.core.launchConfigurationTypes">
@@ -122,16 +126,26 @@
       </runtime>
    </extension>
    <extension
-         point="org.eclipse.launchbar.core.remoteServices2">
-      <remoteServices
-            id="ca.cdtdoug.wascana.arduino.core.remoteServices"
-            isAutoPopulated="false"
+         point="org.eclipse.remote.core.remoteServices">
+      <connectionType
+            capabilities="7"
+            id="ca.cdtdoug.wascana.arduino.core.connectionType"
             name="Arduino">
-      </remoteServices>
-      <service
-            factory="ca.cdtdoug.wascana.arduino.core.internal.remote.ArduinoConnectionManager$Factory"
-            remoteServicesId="ca.cdtdoug.wascana.arduino.core.remoteServices"
-            service="org.eclipse.remote.core.api2.IRemoteConnectionManager">
-      </service>
+      </connectionType>
+      <connectionService
+            connectionTypeId="ca.cdtdoug.wascana.arduino.core.connectionType"
+            factory="ca.cdtdoug.wascana.arduino.core.internal.remote.ArduinoRemoteConnection$Factory"
+            service="ca.cdtdoug.wascana.arduino.core.remote.IArduinoRemoteConnection">
+      </connectionService>
+      <connectionService
+            connectionTypeId="ca.cdtdoug.wascana.arduino.core.connectionType"
+            factory="ca.cdtdoug.wascana.arduino.core.internal.remote.ArduinoRemoteConnection$Factory"
+            service="org.eclipse.remote.core.IRemoteCommandShellService">
+      </connectionService>
+      <connectionService
+            connectionTypeId="ca.cdtdoug.wascana.arduino.core.connectionType"
+            factory="ca.cdtdoug.wascana.arduino.core.internal.remote.ArduinoRemoteConnection$Factory"
+            service="org.eclipse.remote.core.IRemoteConnectionPropertyService">
+      </connectionService>
    </extension>
 </plugin>

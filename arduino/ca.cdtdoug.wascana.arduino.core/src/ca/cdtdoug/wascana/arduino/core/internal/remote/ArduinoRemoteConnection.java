@@ -1,106 +1,199 @@
 package ca.cdtdoug.wascana.arduino.core.internal.remote;
 
-import java.util.Properties;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.remote.core.api2.AbstractRemoteConnection;
-import org.eclipse.remote.core.api2.IRemoteConnection;
-import org.eclipse.remote.core.api2.IRemoteConnectionWorkingCopy;
-import org.eclipse.remote.core.api2.IRemoteServices;
-import org.eclipse.remote.core.exception.RemoteConnectionException;
+import org.eclipse.cdt.utils.serial.SerialPort;
+import org.eclipse.remote.core.IRemoteCommandShellService;
+import org.eclipse.remote.core.IRemoteConnection;
+import org.eclipse.remote.core.IRemoteConnection.Service;
+import org.eclipse.remote.core.IRemoteConnectionPropertyService;
+import org.eclipse.remote.core.IRemoteProcess;
 
 import ca.cdtdoug.wascana.arduino.core.internal.Activator;
 import ca.cdtdoug.wascana.arduino.core.remote.Board;
 import ca.cdtdoug.wascana.arduino.core.remote.IArduinoBoardManager;
 import ca.cdtdoug.wascana.arduino.core.remote.IArduinoRemoteConnection;
 
-public class ArduinoRemoteConnection extends AbstractRemoteConnection implements IArduinoRemoteConnection {
+public class ArduinoRemoteConnection
+implements IRemoteConnectionPropertyService, IRemoteCommandShellService, IRemoteProcess, IArduinoRemoteConnection {
 
-	private String portName;
-	private Board board;
-	private boolean isOpen;
+	private final IArduinoBoardManager boardManager = Activator.getService(IArduinoBoardManager.class);
+	private final IRemoteConnection remoteConnection;
+	private SerialPort serialPort;
+	private Object mutex = new Object();
 
-	public ArduinoRemoteConnection(IRemoteServices remoteServices, String name, Properties properties) {
-		super(remoteServices, name, properties);
-		init();
+	public ArduinoRemoteConnection(IRemoteConnection remoteConnection) {
+		this.remoteConnection = remoteConnection;
 	}
 
-	public ArduinoRemoteConnection(ArduinoRemoteConnectionWorkingCopy workingCopy) {
-		super(workingCopy);
-		init();
-	}
-
-	private void init() {
-		portName = getAttributes().get(PORT_NAME);
-		
-		IArduinoBoardManager boardManager = Activator.getService(IArduinoBoardManager.class);
-		String boardId = getAttributes().get(BOARD_ID);
-		if (boardId != null) {
-			board = boardManager.getBoard(boardId);
+	public static class Factory implements IRemoteConnection.Service.Factory {
+		@SuppressWarnings("unchecked")
+		@Override
+		public <T extends Service> T getService(IRemoteConnection remoteConnection, Class<T> service) {
+			if (IArduinoRemoteConnection.class.equals(service)) {
+				return (T) new ArduinoRemoteConnection(remoteConnection);
+			} else if (IRemoteConnectionPropertyService.class.equals(service)
+					|| IRemoteCommandShellService.class.equals(service)) {
+				return (T) remoteConnection.getService(IArduinoRemoteConnection.class);
+			}
+			return null;
 		}
 	}
 
 	@Override
-	public IRemoteConnection getConnection() {
-		return this;
-	}
-
-	@Override
-	public boolean isOpen() {
-		return isOpen;
-	}
-	
-	@Override
-	public IStatus getConnectionStatus() {
-		if (isOpen) {
-			return Status.OK_STATUS;
-		} else {
-			return Status.CANCEL_STATUS;
-		}
-	}
-
-	@Override
-	public void open(IProgressMonitor monitor) throws RemoteConnectionException {
-		isOpen = true;
-		// TODO do I want to open the serial port at this point? or wait for clients.
-	}
-
-	@Override
-	public void close() {
-		isOpen = false;
+	public IRemoteConnection getRemoteConnection() {
+		return remoteConnection;
 	}
 
 	@Override
 	public String getProperty(String key) {
-		if (OS_NAME_PROPERTY.equals("key"))
+		if (IRemoteConnection.OS_NAME_PROPERTY.equals(key)) {
 			return "arduino";
-		return null;
+		} else if (IRemoteConnection.OS_ARCH_PROPERTY.equals(key)) {
+			return "avr"; // TODO handle arm
+		} else {
+			return null;
+		}
 	}
 
 	@Override
-	public IRemoteConnectionWorkingCopy getWorkingCopy() {
-		return new ArduinoRemoteConnectionWorkingCopy(this);
-	}
-	
-	@Override
 	public Board getBoard() {
-		return board;
+		String boardId = remoteConnection.getAttribute(BOARD_ID);
+		return boardManager.getBoard(boardId);
 	}
 
 	@Override
 	public String getPortName() {
-		return portName;
+		return remoteConnection.getAttribute(PORT_NAME);
+	}
+
+
+	@Override
+	public IRemoteProcess getCommandShell(int flags) throws IOException {
+		if (serialPort != null) {
+			// can only have one open at a time
+			return null;
+		}
+
+		serialPort = new SerialPort(getPortName());
+		resume();
+		return this;
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
-	public <T extends Service> T getService(Class<T> service) {
-		if (IArduinoRemoteConnection.class.equals(service))
-			return (T)this;
-		else
-			return super.getService(service);
+	public InputStream getErrorStream() {
+		return new InputStream() {
+			@Override
+			public int read() throws IOException {
+				synchronized (mutex) {
+					while (serialPort != null) {
+						try {
+							mutex.wait();
+						} catch (InterruptedException e) {
+							Activator.log(e);
+						}
+					}
+				}
+				// we're done
+				return -1;
+			}
+
+		};
+	}
+
+	@Override
+	public InputStream getInputStream() {
+		return new InputStream() {
+			InputStream serialIn = serialPort.getInputStream();
+
+			@Override
+			public int read() throws IOException {
+				return serialIn.read();
+			}
+
+			@Override
+			public void close() throws IOException {
+				serialIn.close();
+				serialPort = null;
+			}
+		};
+	}
+
+	@Override
+	public OutputStream getOutputStream() {
+		return new OutputStream() {
+			OutputStream serialOut = serialPort.getOutputStream();
+			
+			@Override
+			public void write(int b) throws IOException {
+				serialOut.write(b);
+			}
+			
+			@Override
+			public void close() throws IOException {
+				serialOut.close();
+				serialPort = null;
+			}
+		};
+	}
+
+	@Override
+	public void destroy() {
+		pause();
+		synchronized (mutex) {
+			try {
+				serialPort.close();
+			} catch (IOException e) {
+				Activator.log(e);
+			}
+			serialPort = null;
+			mutex.notifyAll();
+		}
+	}
+
+	@Override
+	public int exitValue() {
+		return 0;
+	}
+
+	@Override
+	public int waitFor() throws InterruptedException {
+		synchronized (mutex) {
+			while (serialPort != null) {
+				mutex.wait();
+			}
+		}
+		return 0;
+	}
+
+	@Override
+	public boolean isCompleted() {
+		return serialPort == null;
+	}
+
+	@Override
+	public void pause() {
+		if (serialPort != null) {
+			try {
+				if (serialPort.isOpen())
+					serialPort.close();
+			} catch (IOException e) {
+				Activator.log(e);
+			}
+		}
+	}
+
+	@Override
+	public void resume() {
+		if (serialPort != null) {
+			try {
+				serialPort.open();
+			} catch (IOException e) {
+				Activator.log(e);
+			}
+		}
 	}
 
 }

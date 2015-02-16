@@ -25,8 +25,8 @@ import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationType;
 import org.eclipse.debug.core.model.LaunchConfigurationDelegate;
-import org.eclipse.remote.core.api2.IRemoteConnection;
-import org.eclipse.remote.core.api2.IRemoteLaunchConfigManagerService;
+import org.eclipse.remote.core.IRemoteConnection;
+import org.eclipse.remote.core.launch.IRemoteLaunchConfigService;
 
 import ca.cdtdoug.wascana.arduino.core.ArduinoProjectGenerator;
 import ca.cdtdoug.wascana.arduino.core.internal.Activator;
@@ -108,7 +108,7 @@ public class ArduinoLaunchConfigurationDelegate extends LaunchConfigurationDeleg
 					String command = buildConfig.getBuilder().getCommand();
 
 					// If opened, temporarily close the connection so we can use it to download the firmware.
-					boolean wasOpened = connection.getConnectionStatus().equals(Status.OK_STATUS);
+					boolean wasOpened = connection.isOpen();
 					if (wasOpened) {
 						connection.close();
 					}
@@ -164,7 +164,7 @@ public class ArduinoLaunchConfigurationDelegate extends LaunchConfigurationDeleg
 	}
 
 	private IRemoteConnection getActiveRemote(ILaunchConfiguration configuration) {
-		IRemoteLaunchConfigManagerService remoteLaunchService = Activator.getService(IRemoteLaunchConfigManagerService.class);
-		return remoteLaunchService.getActiveRemote(configuration);
+		IRemoteLaunchConfigService remoteLaunchService = Activator.getService(IRemoteLaunchConfigService.class);
+		return remoteLaunchService.getActiveConnection(configuration);
 	}
 }

@@ -37,11 +37,10 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.remote.core.api2.IRemoteConnection;
-import org.eclipse.remote.core.api2.IRemoteConnectionManager;
-import org.eclipse.remote.core.api2.IRemoteLaunchConfigManagerService;
-import org.eclipse.remote.core.api2.IRemoteManager;
-import org.eclipse.remote.core.api2.IRemoteServices;
+import org.eclipse.remote.core.IRemoteConnection;
+import org.eclipse.remote.core.IRemoteConnectionType;
+import org.eclipse.remote.core.IRemoteServicesManager;
+import org.eclipse.remote.core.launch.IRemoteLaunchConfigService;
 
 import ca.cdtdoug.wascana.arduino.core.internal.Activator;
 import ca.cdtdoug.wascana.arduino.core.internal.launch.ArduinoLaunchConfigurationDelegate;
@@ -86,15 +85,15 @@ public class ArduinoProjectGenerator {
 
 		Board board = null;
 		
-		IRemoteManager remoteManager = Activator.getService(IRemoteManager.class);
-		IRemoteLaunchConfigManagerService remoteLaunchService = Activator.getService(IRemoteLaunchConfigManagerService.class);
-		IRemoteConnection remoteConnection = remoteLaunchService.getLastActiveRemote(ArduinoLaunchConfigurationDelegate.getLaunchConfigurationType());
+		IRemoteServicesManager remoteManager = Activator.getService(IRemoteServicesManager.class);
+		IRemoteLaunchConfigService remoteLaunchService = Activator.getService(IRemoteLaunchConfigService.class);
+		IRemoteConnection remoteConnection = remoteLaunchService.getLastActiveConnection(ArduinoLaunchConfigurationDelegate.getLaunchConfigurationType());
 		if (remoteConnection != null) {
 			IArduinoRemoteConnection arduinoRemote = remoteConnection.getService(IArduinoRemoteConnection.class);
 			board = arduinoRemote.getBoard();
 		} else {
-			IRemoteServices remoteServices = remoteManager.getRemoteServices(ArduinoRemoteConnection.TYPE_ID);
-			Collection<IRemoteConnection> connections = remoteServices.getService(IRemoteConnectionManager.class).getConnections();
+			IRemoteConnectionType connectionType = remoteManager.getConnectionType(ArduinoRemoteConnection.TYPE_ID);
+			Collection<IRemoteConnection> connections = connectionType.getConnections();
 			if (!connections.isEmpty()) {
 				IRemoteConnection firstConnection = connections.iterator().next();
 				IArduinoRemoteConnection firstArduino = firstConnection.getService(IArduinoRemoteConnection.class);

@@ -1,48 +1,67 @@
 package ca.cdtdoug.wascana.arduino.ui.remote;
 
+import java.lang.reflect.InvocationTargetException;
+
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.PlatformObject;
-import org.eclipse.jface.wizard.IWizard;
-import org.eclipse.remote.core.api2.IRemoteServices;
-import org.eclipse.remote.core.api2.IRemoteServices.Service;
-import org.eclipse.remote.ui.api2.IRemoteServicesUI;
-import org.eclipse.swt.graphics.Image;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.operation.IRunnableContext;
+import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.remote.core.IRemoteConnection;
+import org.eclipse.remote.core.IRemoteConnectionType;
+import org.eclipse.remote.core.IRemoteConnectionType.Service;
+import org.eclipse.remote.core.exception.RemoteConnectionException;
+import org.eclipse.remote.ui.IRemoteUIConnectionService;
+import org.eclipse.remote.ui.IRemoteUIConnectionWizard;
+import org.eclipse.swt.widgets.Shell;
 
 import ca.cdtdoug.wascana.arduino.ui.internal.Activator;
 
-public class ArduinoRemoteServicesUI extends PlatformObject implements IRemoteServicesUI {
+public class ArduinoRemoteServicesUI extends PlatformObject implements IRemoteUIConnectionService {
 
-	private final IRemoteServices remoteServices;
+	private final IRemoteConnectionType connectionType;
 	
-	public ArduinoRemoteServicesUI(IRemoteServices remoteServices) {
-		this.remoteServices = remoteServices;
-	}
-	
-	@Override
-	public IRemoteServices getRemoteServices() {
-		return remoteServices;
+	public ArduinoRemoteServicesUI(IRemoteConnectionType connectionType) {
+		this.connectionType = connectionType;
 	}
 
 	@Override
-	public Image getIcon() {
-		return Activator.getDefault().getImage(Activator.IMG_ARDUINO);
+	public void openConnectionWithProgress(Shell shell, IRunnableContext context, final IRemoteConnection connection) {
+		try {
+			context.run(false, true, new IRunnableWithProgress() {
+				@Override
+				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+					try {
+						connection.open(monitor);
+					} catch (RemoteConnectionException e) {
+						Activator.getDefault().getLog().log(e.getStatus());
+					}
+				}
+			});
+		} catch (InvocationTargetException | InterruptedException e) {
+			Activator.getDefault().getLog().log(new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getLocalizedMessage(), e));
+		}
 	}
 
 	@Override
-	public Image getIcon(IStatus status) {
-		// TODO overlay with status status
-		return getIcon();
+	public IRemoteConnectionType getConnectionType() {
+		return connectionType;
 	}
 
 	@Override
-	public IWizard getNewWizard() {
+	public IRemoteUIConnectionWizard getConnectionWizard(Shell shell) {
 		return new NewArduinoTargetWizard();
 	}
 
-	public static class Factory implements IRemoteServices.Service.Factory {
+	public static class Factory implements IRemoteConnectionType.Service.Factory {
+		@SuppressWarnings("unchecked")
 		@Override
-		public Service getService(IRemoteServices remoteServices) {
-			return new ArduinoRemoteServicesUI(remoteServices);
+		public <T extends Service> T getService(IRemoteConnectionType connectionType, Class<T> service) {
+			if (IRemoteUIConnectionService.class.equals(service)) {
+				return (T) new ArduinoRemoteServicesUI(connectionType);
+			}
+			return null;
 		}
 	}
 
