@@ -76,28 +76,6 @@
       </provider>
    </extension>
    <extension
-         point="org.eclipse.launchbar.core.launchBarContributions">
-      <descriptorType
-            class="ca.cdtdoug.wascana.arduino.core.internal.launch.ArduinoLaunchDescriptorType"
-            id="ca.cdtdoug.wascana.arduino.core.descriptorType"
-            priority="5">
-      </descriptorType>
-      <configProvider
-            class="ca.cdtdoug.wascana.arduino.core.internal.launch.ArduinoLaunchConfigurationProvider"
-            launchConfigurationType="ca.cdtdoug.wascana.arduino.core.launchConfigurationType">
-      </configProvider>
-      <configType
-            descriptorType="ca.cdtdoug.wascana.arduino.core.descriptorType"
-            isDefault="true"
-            launchConfigurationType="ca.cdtdoug.wascana.arduino.core.launchConfigurationType"
-            targetType="ca.cdtdoug.wascana.arduino.core.targetType">
-      </configType>
-      <targetType
-            connectionTypeId="ca.cdtdoug.wascana.arduino.core.connectionType"
-            id="ca.cdtdoug.wascana.arduino.core.targetType">
-      </targetType>
-   </extension>
-   <extension
          point="org.eclipse.debug.core.launchConfigurationTypes">
       <launchConfigurationType
             delegate="ca.cdtdoug.wascana.arduino.core.internal.launch.ArduinoLaunchConfigurationDelegate"
@@ -105,25 +83,6 @@
             modes="run"
             name="Arduino">
       </launchConfigurationType>
-   </extension>
-   <extension
-         point="org.eclipse.core.contenttype.contentTypes">
-      <content-type
-            base-type="org.eclipse.cdt.core.binaryFile"
-            file-extensions="hex"
-            id="ca.cdtdoug.wascana.arduino.core.contentType.hex"
-            name="Arduino Hex download file"
-            priority="normal">
-      </content-type>
-   </extension>
-   <extension
-         id="arduinoNature"
-         point="org.eclipse.core.resources.natures">
-      <runtime>
-         <run
-               class="ca.cdtdoug.wascana.arduino.core.ArduinoProjectNature">
-         </run>
-      </runtime>
    </extension>
    <extension
          point="org.eclipse.remote.core.remoteServices">
@@ -147,5 +106,46 @@
             factory="ca.cdtdoug.wascana.arduino.core.internal.remote.ArduinoRemoteConnection$Factory"
             service="org.eclipse.remote.core.IRemoteConnectionPropertyService">
       </connectionService>
+   </extension>
+   <extension
+         point="org.eclipse.launchbar.core.launchBarContributions">
+      <descriptorType
+            class="ca.cdtdoug.wascana.arduino.core.internal.launch.ArduinoLaunchDescriptorType"
+            id="ca.cdtdoug.wascana.arduino.core.descriptorType"
+            priority="5">
+      </descriptorType>
+      <configProvider
+            class="ca.cdtdoug.wascana.arduino.core.internal.launch.ArduinoLaunchConfigurationProvider"
+            launchConfigurationType="ca.cdtdoug.wascana.arduino.core.launchConfigurationType">
+      </configProvider>
+      <configType
+            descriptorType="ca.cdtdoug.wascana.arduino.core.descriptorType"
+            isDefault="true"
+            launchConfigurationType="ca.cdtdoug.wascana.arduino.core.launchConfigurationType"
+            targetType="ca.cdtdoug.wascana.arduino.core.targetType">
+      </configType>
+      <targetType
+            connectionTypeId="ca.cdtdoug.wascana.arduino.core.connectionType"
+            id="ca.cdtdoug.wascana.arduino.core.targetType">
+      </targetType>
+   </extension>
+   <extension
+         point="org.eclipse.core.contenttype.contentTypes">
+      <content-type
+            base-type="org.eclipse.cdt.core.binaryFile"
+            file-extensions="hex"
+            id="ca.cdtdoug.wascana.arduino.core.contentType.hex"
+            name="Arduino Hex download file"
+            priority="normal">
+      </content-type>
+   </extension>
+   <extension
+         id="arduinoNature"
+         point="org.eclipse.core.resources.natures">
+      <runtime>
+         <run
+               class="ca.cdtdoug.wascana.arduino.core.ArduinoProjectNature">
+         </run>
+      </runtime>
    </extension>
 </plugin>

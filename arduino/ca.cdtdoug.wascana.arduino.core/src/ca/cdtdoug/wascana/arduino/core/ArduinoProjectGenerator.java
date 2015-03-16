@@ -51,7 +51,7 @@ import ca.cdtdoug.wascana.arduino.core.remote.IArduinoRemoteConnection;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 
-@SuppressWarnings("restriction")
+@SuppressWarnings({"restriction", "nls"})
 public class ArduinoProjectGenerator {
 
 	public static final String BOARD_OPTION_ID = "ca.cdtdoug.wascana.arduino.core.option.board";
