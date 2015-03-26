@@ -7,9 +7,9 @@ import java.io.OutputStream;
 import org.eclipse.cdt.utils.serial.SerialPort;
 import org.eclipse.remote.core.IRemoteCommandShellService;
 import org.eclipse.remote.core.IRemoteConnection;
-import org.eclipse.remote.core.IRemoteConnection.Service;
 import org.eclipse.remote.core.IRemoteConnectionPropertyService;
 import org.eclipse.remote.core.IRemoteProcess;
+import org.eclipse.remote.core.IRemoteProcessBuilder;
 
 import ca.cdtdoug.wascana.arduino.core.internal.Activator;
 import ca.cdtdoug.wascana.arduino.core.remote.Board;
@@ -31,7 +31,7 @@ implements IRemoteConnectionPropertyService, IRemoteCommandShellService, IRemote
 	public static class Factory implements IRemoteConnection.Service.Factory {
 		@SuppressWarnings("unchecked")
 		@Override
-		public <T extends Service> T getService(IRemoteConnection remoteConnection, Class<T> service) {
+		public <T extends IRemoteConnection.Service> T getService(IRemoteConnection remoteConnection, Class<T> service) {
 			if (IArduinoRemoteConnection.class.equals(service)) {
 				return (T) new ArduinoRemoteConnection(remoteConnection);
 			} else if (IRemoteConnectionPropertyService.class.equals(service)
@@ -194,6 +194,21 @@ implements IRemoteConnectionPropertyService, IRemoteCommandShellService, IRemote
 				Activator.log(e);
 			}
 		}
+	}
+
+	@Override
+	public <T extends Service> T getService(Class<T> service) {
+		return null;
+	}
+
+	@Override
+	public <T extends Service> boolean hasService(Class<T> service) {
+		return false;
+	}
+
+	@Override
+	public IRemoteProcessBuilder getProcessBuilder() {
+		return null;
 	}
 
 }
