@@ -2,7 +2,7 @@ package ca.cdtdoug.wascana.arduino.ui.remote;
 
 import java.util.Collection;
 
-import org.eclipse.cdt.utils.serial.SerialPort;
+import org.eclipse.cdt.serial.SerialPort;
 import org.eclipse.remote.core.IRemoteConnection;
 import org.eclipse.remote.core.IRemoteConnectionWorkingCopy;
 import org.eclipse.remote.core.exception.RemoteConnectionException;

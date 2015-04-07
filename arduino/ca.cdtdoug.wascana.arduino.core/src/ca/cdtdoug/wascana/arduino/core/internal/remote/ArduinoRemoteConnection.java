@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import org.eclipse.cdt.utils.serial.SerialPort;
+import org.eclipse.cdt.serial.SerialPort;
 import org.eclipse.remote.core.IRemoteCommandShellService;
 import org.eclipse.remote.core.IRemoteConnection;
 import org.eclipse.remote.core.IRemoteConnectionPropertyService;
@@ -50,9 +50,9 @@ implements IRemoteConnectionPropertyService, IRemoteCommandShellService, IRemote
 	@Override
 	public String getProperty(String key) {
 		if (IRemoteConnection.OS_NAME_PROPERTY.equals(key)) {
-			return "arduino";
+			return "arduino"; //$NON-NLS-1$
 		} else if (IRemoteConnection.OS_ARCH_PROPERTY.equals(key)) {
-			return "avr"; // TODO handle arm
+			return "avr"; // TODO handle arm //$NON-NLS-1$
 		} else {
 			return null;
 		}

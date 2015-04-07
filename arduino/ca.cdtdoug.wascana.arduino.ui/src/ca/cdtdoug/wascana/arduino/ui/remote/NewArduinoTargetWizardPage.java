@@ -1,6 +1,6 @@
 package ca.cdtdoug.wascana.arduino.ui.remote;
 
-import org.eclipse.cdt.utils.serial.SerialPort;
+import org.eclipse.cdt.serial.SerialPort;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
