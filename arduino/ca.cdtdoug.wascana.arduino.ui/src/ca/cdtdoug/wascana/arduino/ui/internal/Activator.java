@@ -1,5 +1,8 @@
 package ca.cdtdoug.wascana.arduino.ui.internal;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -51,6 +54,14 @@ public class Activator extends AbstractUIPlugin {
 
 	public Image getImage(String id) {
 		return getImageRegistry().get(id);
+	}
+
+	public static void log(Exception e) {
+		if (e instanceof CoreException) {
+			plugin.getLog().log(((CoreException) e).getStatus());
+		} else {
+			plugin.getLog().log(new Status(IStatus.ERROR, PLUGIN_ID, e.getLocalizedMessage(), e));
+		}
 	}
 
 	public static <T> T getService(Class<T> service) {

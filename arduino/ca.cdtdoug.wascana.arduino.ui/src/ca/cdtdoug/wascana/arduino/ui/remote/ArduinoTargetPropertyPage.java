@@ -1,5 +1,6 @@
 package ca.cdtdoug.wascana.arduino.ui.remote;
 
+import java.io.IOException;
 import java.util.Collection;
 
 import org.eclipse.cdt.serial.SerialPort;
@@ -44,14 +45,18 @@ public class ArduinoTargetPropertyPage extends PropertyPage implements IWorkbenc
 
 		String currentPort = arduinoRemote.getPortName();
 		int i = 0, portSel = -1;
-		for (String port : SerialPort.list()) {
-			portSelector.add(port);
-			if (port.equals(currentPort)) {
-				portSel = i;
-			} else {
-				portSel = portSel < 0 ? 0 : portSel;
+		try {
+			for (String port : SerialPort.list()) {
+				portSelector.add(port);
+				if (port.equals(currentPort)) {
+					portSel = i;
+				} else {
+					portSel = portSel < 0 ? 0 : portSel;
+				}
+				i++;
 			}
-			i++;
+		} catch (IOException e) {
+			Activator.log(e);
 		}
 		if (portSel >= 0) {
 			portSelector.select(portSel);

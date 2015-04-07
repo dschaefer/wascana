@@ -1,5 +1,7 @@
 package ca.cdtdoug.wascana.arduino.ui.remote;
 
+import java.io.IOException;
+
 import org.eclipse.cdt.serial.SerialPort;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
@@ -64,7 +66,12 @@ public class NewArduinoTargetWizardPage extends WizardPage {
 
 		portCombo = new Combo(comp, SWT.READ_ONLY);
 		portCombo.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		portNames = SerialPort.list();
+		try {
+			portNames = SerialPort.list();
+		} catch (IOException e) {
+			portNames = new String[0];
+			Activator.log(e);
+		}
 		for (String portName : portNames) {
 			portCombo.add(portName);
 		}
