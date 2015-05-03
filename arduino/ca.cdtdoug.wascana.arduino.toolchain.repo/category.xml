@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+    <category-def name="arduino" label="Arduino C/C++ Toolchain"/>
+    <feature id="ca.cdtdoug.wascana.arduino.toolchain" version="0.0.0">
+        <category name="arduino"/>
+    </feature>
+</site>

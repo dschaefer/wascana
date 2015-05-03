@@ -8,39 +8,22 @@
 	<packaging>pom</packaging>
 
 	<properties>
-		<tycho-version>0.21.0</tycho-version>
+		<tycho-version>0.22.0</tycho-version>
 	</properties>
 
 	<modules>
-		<module>ca.cdtdoug.wascana.arduino.core</module>
-		<module>ca.cdtdoug.wascana.arduino.ui</module>
-		<module>ca.cdtdoug.wascana.arduino-feature</module>
-		<module>ca.cdtdoug.wascana.arduino.win32-feature</module>
-		<module>ca.cdtdoug.wascana.arduino.macosx-feature</module>
-		<module>ca.cdtdoug.wascana.arduino.linux.x86-feature</module>
-		<module>ca.cdtdoug.wascana.arduino.linux.x86_64-feature</module>
-		<module>ca.cdtdoug.wascana.arduino.repo</module>
+		<module>ca.cdtdoug.wascana.arduino.toolchain</module>
+		<module>ca.cdtdoug.wascana.arduino.toolchain.linux.x86</module>
+		<module>ca.cdtdoug.wascana.arduino.toolchain.linux.x86_64</module>
+		<module>ca.cdtdoug.wascana.arduino.toolchain.macosx</module>
+		<module>ca.cdtdoug.wascana.arduino.toolchain.repo</module>
+		<module>ca.cdtdoug.wascana.arduino.toolchain.win32</module>
 	</modules>
 
 	<repositories>
 		<repository>
-			<id>eclipse</id>
-			<url>http://download.eclipse.org/releases/luna</url>
-			<layout>p2</layout>
-		</repository>
-		<repository>
-			<id>launchbar</id>
-			<url>https://hudson.eclipse.org/cdt/job/launchbar-master/lastSuccessfulBuild/artifact/repo/target/repository/</url>
-			<layout>p2</layout>
-		</repository>
-		<repository>
 			<id>cdt</id>
 			<url>http://download.eclipse.org/tools/cdt/builds/master/nightly</url>
-			<layout>p2</layout>
-		</repository>
-		<repository>
-			<id>deps</id>
-			<url>http://dl.bintray.com/cdtdoug/wascana-deps</url>
 			<layout>p2</layout>
 		</repository>
 	</repositories>

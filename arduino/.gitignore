@@ -3,3 +3,4 @@
 */*.tgz
 */*.zip
 */rootfiles/
+*/arduino-*
