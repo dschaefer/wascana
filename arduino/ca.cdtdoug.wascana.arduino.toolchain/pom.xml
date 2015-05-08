@@ -11,6 +11,6 @@
   </parent>
 
   <groupId>ca.cdtdoug.wascana.features</groupId>
-  <artifactId>ca.cdtdoug.wascana.arduino</artifactId>
+  <artifactId>ca.cdtdoug.wascana.arduino.toolchain</artifactId>
   <packaging>eclipse-feature</packaging>
 </project>

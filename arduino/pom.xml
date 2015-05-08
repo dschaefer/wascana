@@ -22,8 +22,8 @@
 
 	<repositories>
 		<repository>
-			<id>cdt</id>
-			<url>http://download.eclipse.org/tools/cdt/builds/master/nightly</url>
+			<id>eclipse</id>
+			<url>http://download.eclipse.org/releases/mars/</url>
 			<layout>p2</layout>
 		</repository>
 	</repositories>

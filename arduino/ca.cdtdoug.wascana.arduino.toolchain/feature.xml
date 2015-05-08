@@ -4,7 +4,7 @@
       label="Arduino C++ Tooling"
       version="1.0.0.qualifier"
       provider-name="Doug Schaefer"
-      plugin="ca.cdtdoug.wascana.arduino.ui">
+      plugin="org.eclipse.cdt.arduino.ui">
 
    <description url="http://www.example.com/description">
       [Enter Feature Description here.]
@@ -43,33 +43,5 @@
    <requires>
       <import feature="org.eclipse.cdt.arduino" version="1.0.0.qualifier"/>
    </requires>
-
-   <plugin
-         id="ca.cdtdoug.wascana.arduino.core"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="ca.cdtdoug.wascana.arduino.ui"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.freemarker"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.scream3r.jssc"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
 
 </feature>
