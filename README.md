@@ -21,3 +21,11 @@ major platforms: Windows, Linux, and Mac. Linux comes in both 32-bit and
 64-bit varieties since 64-bit distros tend not to support 32-bit executables
 very well. Windows is 32-bit since it's good at that. And Mac is 64-bit since
 there are no longer any 32-bit Mac OS X releases.
+
+BTW, in the past, Wascana used to focus on the MinGW toolchain. While that's
+still a goal, it has been put on the backburner. The original MinGW.org has
+somewhat stagnated. The newer MinGW-64 project which is much more up to date
+and has a 64-bit compiler, doesn't have an official distribution. That makes
+it much more work. And with the free Visual Studio being a much more complete
+environment, I'd rather focus on helping get proper Visual C++ support into
+the CDT.
