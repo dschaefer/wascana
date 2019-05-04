@@ -1,6 +1,6 @@
 {
-    "version": "1.2",
+    "version": "1.3",
     "url": "https://raw.githubusercontent.com/dschaefer/wascana/master/hello-wascana.7z",
-    "hash": "ADAB4AD0B5DDFAE5E26248ADA26774C242ACC6AB7BCE6997536C0C65939E7F9D",
+    "hash": "344E4EB814BA250A583DD60F6D4300AF6890D472ED5DEDA8ED54309803D6EDCE",
     "bin": "hello-wascana.ps1"
 }
